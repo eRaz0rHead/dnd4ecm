@@ -10,6 +10,8 @@ out/
 *.js.deps
 *.js.map
 
+// generated 
+web/main.js
 // Include when developing application packages
 pubspec.lock 
 
