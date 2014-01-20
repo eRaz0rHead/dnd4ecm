@@ -80,7 +80,7 @@
       (put! command-chan {:event :to-init :actors [(:drag-item e)]}))))
 
 
-(defn init-list [{:keys [actors current-init current-round] :as app} owner opts]
+(defn init-list [{:keys [actors current-init current-order current-round] :as app} owner opts]
   (reify
 
     om/IDidMount
@@ -103,13 +103,12 @@
 
             (dom/ul  nil ;#js {:id "init-list" :ref "init-list" }
                      (om/build-all act/actor-init-item
-                                   (util/init-list actors current-init current-round)
+                                   (util/init-list actors current-init current-order current-round)
                                    {:opts opts :key :id} ))))))
 
 
 
 (defn initpane [{:keys [actors current-init] :as app} owner opts]
-
   (reify
     om/IRender
     (render [_]

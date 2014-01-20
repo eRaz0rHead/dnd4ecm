@@ -9,7 +9,7 @@
 
             [omdnd.actor :as act]
             [omdnd.util :as util]
-             [omdnd.ux :as ux]
+            [omdnd.ux :as ux]
             [omdnd.initpane :as initpane]
             [omdnd.centerpane :as centerpane]
             [omdnd.rightpane :as rightpane]
@@ -30,31 +30,11 @@
 
 (def ENTER_KEY 13)
 
-
-
-;; =============================================================================
-;; Routing
-
-;(defroute "/" [] (swap! app-state assoc :showing :all))
-
-;(defroute "/:filter" [filter] (swap! app-state assoc :showing (keyword filter)))
-
-;(def history (History.))
-
-;(events/listen history EventType/NAVIGATE
-;  (fn [e] (secretary/dispatch! (.-token e))))
-
-;(.setEnabled history true)
-
-
-
-
 (def app-state (atom {:actors  (util/generate-rnd-monsters 7)
                       :current-init 0
                       :current-round 0
                       }
                      ))
-
 
 
 (defn set-actors-value [ids app k v]
@@ -76,15 +56,29 @@
   (om/update! app assoc :messages (str  " TO COMBAT > " ids ))
   (set-actors-value ids app :reserved nil))
 
+(defn handle-next-turn [app owner]
+  (let [next-actor (om/read app
+                            (fn [app]
+                              (second
+                               (util/init-list (:actors app ) (:current-init app) (:current-order app)))))
+
+         is_new_round  (om/read next-actor #(= (first (util/sort-actors  (:actors app ))) %))
+        ]
+
+   (om/update! app assoc :current-init (om/read next-actor :init))
+   (om/update! app assoc :current-order (om/read next-actor :order))
+   (when is_new_round
+      (om/update! app assoc :current-round (inc (:current-round @app-state))))
+  ))
 
 (defn handle-command [{:keys [event actors] :as e} app  owner]
     (om/set-state! owner :command-event e)
     (case event
+      :next-turn (handle-next-turn  app owner)
       :reserve  (set-reserved (set (map #(om/read % :id) actors)) app)
       :to-init  (add-to-init (set (map #(om/read % :id) actors)) app)
       )
   )
-
 
 
 (defn main-panel [app owner opts]
@@ -101,10 +95,9 @@
 
                          (om/build initpane/initpane app m)
 
-                        ; (om/build centerpane/centerpane app  m )
-                           (dom/div #js { :id "center-pane"} (str state))
+                         (om/build centerpane/centerpane app  m )
+                         ;(dom/div #js { :id "center-pane"} (str state))
                          (om/build rightpane/rightpane app  m )
-
 
                          )))))
 

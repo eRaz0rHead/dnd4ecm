@@ -89,13 +89,51 @@
 (defn active [actors]
   (s/difference (set actors)  (s/union (set (reserved actors)) (set (dead actors)))))
 
-(defn init-list [actors current-init current-round]
-  (let [sorted-list  (sort-by (juxt :init :order) #(compare %2 %1) (active actors))
-        lower      (filter #(< current-init (:init %)) sorted-list)
-        upper     (filter #(>=  current-init (:init %)) sorted-list)]
-    (vec (flatten (conj lower (new-round-marker current-round) upper)))
-    ))
+(defn sort-actors [actors]
+  (sort-by (juxt :init #(- 0 (get % :order 0 )) :initBonus) #(compare %2 %1) (active actors))
+  )
+
+
+(defn init-list [actors current-init current-order & [current-round]]
+  (let [sorted-list  (sort-by  (juxt :init #(- 0 (get % :order 0 )) :initBonus) #(compare %2 %1) (active actors))
+        lower        (filter #(< current-init (:init %)) sorted-list)
+        upper        (filter #(>=  current-init (:init %)) sorted-list)]
+    (if current-round
+      (vec (flatten (conj lower (new-round-marker current-round) upper)))
+      (vec (flatten (conj lower upper)))
+    )))
 
 
 
+
+(defn establish-order [actors]
+  (let [init-groups (partition-by :init (sort-actors actors))]
+    (vec (flatten  (map (fn[group]
+                     (map-indexed (fn [idx member]
+                                    (if-not (:order member)
+                                      (assoc member :order idx))) group))
+                   init-groups)
+
+              ))))
+
+(defn lower-list [current-init current-order]
+  (fn [actor]
+    (if (=  current-init (:init actor))
+      (> current-order (get actor :order 0))
+      (if (< current-init (:init actor))
+        true
+        false)
+      )))
+
+
+
+
+(defn init-list [actors current-init current-order & [current-round]]
+  (let [sorted-list (sort-actors  actors)
+        lower       (filter #((lower-list current-init current-order) %) sorted-list)
+        upper       (filter #((complement (lower-list current-init current-order)) %) sorted-list)]
+    (if current-round
+      (vec (flatten (conj lower (new-round-marker current-round) upper)))
+      (vec (flatten (conj lower upper)))
+    )))
 
