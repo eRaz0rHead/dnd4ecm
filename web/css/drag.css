@@ -1,0 +1,109 @@
+ @charset "utf-8";
+    @font-face{
+      font-family:'u2800'; src:url('http://unicode-table.com/fonts/u/u2800-webfont.eot');src:url('http://unicode-table.com/fonts/u/u2800-webfont.eot?#iefix') format('embedded-opentype'),url('http://unicode-table.com/fonts/u/u2800-webfont.woff') format('woff'),url('http://unicode-table.com/fonts/u/u2800-webfont.ttf') format('truetype'),url('http://unicode-table.com/fonts/u/u2800-webfont.svg#universaliaregular') format('svg');
+      font-weight:normal;
+      font-style:normal;
+    }
+
+
+    [contenteditable=true] {
+        color:blue;
+        padding:2px;
+
+    }
+    span[contenteditable=true]:hover,
+    span[contenteditable=true]:focus  {
+        color:red;
+        box-shadow: -1px 1px 3px #234;
+    }
+
+    ul {
+        list-style-type: none;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+
+        min-height:50px;
+    }
+
+
+    li > span.init-name {
+        display:inline-block;
+        max-width:180px;
+    }
+
+    .draggable span.drag-handle {
+        visibility: hidden;
+        height: 60px;
+        float: left;
+        display: inline-block;
+        padding-right: 4px;
+
+        font-size: 30px;
+        font-family: u2800;
+    }
+
+    li.draggable:hover span.drag-handle {
+        visibility: visible;
+    }
+
+    span.drag-handle:hover {
+        cursor: -webkit-grab;
+        cursor: -moz-grab;
+    }
+
+    .cursor_moving {
+        cursor: move;
+    }
+
+    .el_moving {
+        opacity: 0.6;
+        z-index: 300;
+    }
+
+    .el_moving span.drag-handle {
+        visibility: visible;
+    }
+
+    .drag_hover_class {
+
+    }
+    .init-num {
+        float:right;
+        display:inline-block;
+    }
+    #reserve-list li {
+        height:1.2em;
+        overflow:hidden;
+        transition: height 300ms;
+        -webkit-transition: height 300ms; /* Safari */
+
+    }
+    #reserve-list li:hover {
+        height:60px;
+    }
+
+
+span.state {
+  font-size:6px;
+}
+
+
+#reserve-list {
+  background:grey;
+  color:grey;
+}
+
+#reserve-list.drag-hover {
+  border:1px solid blue;
+}
+
+#reserve-list .actor {
+
+  background:lightgrey;
+}
+
+
