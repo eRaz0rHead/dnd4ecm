@@ -504,7 +504,7 @@ Initiative List Element
 }
 
 
-#next_round_marker {
+.round_marker {
   color: rgb(233, 233, 233);
   background-color: #38929a;
   text-align:center;

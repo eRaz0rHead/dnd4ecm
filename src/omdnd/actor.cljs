@@ -96,7 +96,7 @@
                     #js {:position "static" })]
 
           (if-not (nil? new_round)
-            (dom/li #js {:key id :id "next_round_marker"} new_round)
+            (dom/li #js {:key id :id "next_round_marker" :className "round_marker"} new_round)
             (html
              [:li.actor.draggable
               {

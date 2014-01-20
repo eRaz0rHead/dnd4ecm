@@ -102,6 +102,7 @@
                      ; (str (om/get-state owner))
 
             (dom/ul  nil ;#js {:id "init-list" :ref "init-list" }
+                     (dom/li  #js { :className "round_marker"} (str "Current Round:" current-round))
                      (om/build-all act/actor-init-item
                                    (util/init-list actors current-init current-order current-round)
                                    {:opts opts :key :id} ))))))

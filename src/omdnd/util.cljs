@@ -80,7 +80,7 @@
 ;;;;
 
 (defn new-round-marker [current-round]
-  (om/to-cursor {:id -1 :key: -1 :new_round (str "Round: " (+ 1 current-round))} {:new_round true}))
+  (om/to-cursor {:id -1 :key: -1 :new_round (str "Next Round: " (+ 1 current-round))} {:new_round true}))
 
 (defn reserved [actors] (filter #( :reserved %)  actors))
 
@@ -124,8 +124,6 @@
         true
         false)
       )))
-
-
 
 
 (defn init-list [actors current-init current-order & [current-round]]
