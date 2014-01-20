@@ -1,0 +1,15 @@
+pom.xml
+*jar
+/lib/
+/classes/
+/targets/
+.lein-deps-sum
+// Don’t commit the following files and directories created by pub and dart2js
+out/
+*.js_
+*.js.deps
+*.js.map
+
+// Include when developing application packages
+pubspec.lock 
+
