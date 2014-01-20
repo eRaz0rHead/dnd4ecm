@@ -19,9 +19,9 @@
     :builds [{:id "om-test"
               :source-paths ["src"]
               :compiler {
-                :output-to "main.js"
+                :output-to "web/main.js"
                 :output-dir "web/out"
-                :source-map "main.js.map"
+                :source-map "web/main.js.map"
                 :optimizations :none
              }}]}
   )
