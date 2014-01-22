@@ -43,7 +43,7 @@
                 (ux/update-bounds owner prev-state opts "right-pane"))
 
     om/IRender
-    (render [_]
+    (render  [_]
             (dom/div #js { :id "right-pane" :ref "right-pane"}
                      (om/build messages app {:opts opts})
                      (dom/div nil (str (om/get-state owner)))

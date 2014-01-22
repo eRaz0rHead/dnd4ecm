@@ -21,13 +21,13 @@
 ;
 
 (defn to? [owner next-props next-state k]
-  (or (and (not (om/get-state owner k))
+  (or (and (not (om/get-render-state owner k))
            (k next-state))
       (and (not (k (om/get-props owner)))
            (k next-props))))
 
 (defn from? [owner next-props next-state k]
-  (or (and (om/get-state owner k)
+  (or (and (om/get-render-state owner k)
            (not (k next-state)))
       (and (k (om/get-props owner))
            (not (k next-props)))))
@@ -35,15 +35,14 @@
 
 
 
+
 ;;; Convenience functions
 
-(defn dragging? [item owner]
-  (or (:dragging item)
-      (om/get-pending-state owner :dragging)))
+(defn dragging? [ owner]
+      (om/get-state owner :dragging))
 
-(defn mouse-down? [item owner]
-  (or (:mouse-down item)
-      (om/get-pending-state owner :mouse-down)))
+(defn mouse-down? [owner]
+      (om/get-state owner :mouse-down))
 
 (defn floor [n]
   (let [num (js/Number. n)]
@@ -90,7 +89,7 @@
   ))
 
 
-(defn setup-comms [app owner opts]
+(defn setup-ux-master [app owner opts]
   (let [drag-evts (chan)
         dims-chan (chan)
         command-chan (chan)
@@ -110,11 +109,18 @@
            )))))
 
 
+(defn setup-bounds-chan [app owner opts]
+  (let [ dims-chan (chan) ]
+    (om/set-state! owner [:chans :dims-chan] dims-chan )
+      (go (while
+          (when-let [event (<! dims-chan)]
+            ;(update-child-bounds  event owner opts)
+            event
+            )))))
 
 
 ;;;;;;;;;;;;
 ;  Dimension handlers
-
 
 (defn bound-filter  [owner]
   (fn [evt]
@@ -202,7 +208,7 @@
 
 
 (defn drag-start [e actor owner opts]
-  (when-not (dragging? actor owner)
+  (when-not (dragging? owner)
     (let [el (om/get-node owner "drag-container")
           drag-start (location e)
           el-offset (element-offset el)
@@ -210,7 +216,6 @@
           drag-evts (drag-evts opts) ]
       ;; if in a sortable need to wait for sortable to
       ;; initiate dragging
-
       (doto owner
         (om/set-state! :location el-offset)
         (om/set-state! :dragging (:id actor))
@@ -224,7 +229,7 @@
 
 
 (defn drag-end [e actor owner opts]
-  (when (dragging? actor owner)
+  (when (dragging? owner)
     (when (om/get-state owner :dragging)
       (om/set-state! owner :dragging false))
     (let [drag-evts (drag-evts opts)
@@ -232,6 +237,7 @@
           drag-start (location e)
           el-offset (element-offset el)
           drag-offset (vec (map - el-offset drag-start))]
+        (prn "drag end!")
       (doto owner
         (om/set-state! :location nil)
         (om/set-state! :drag-offset nil)
@@ -247,7 +253,8 @@
 
 
 (defn drag [e actor owner opts]
-  (when (dragging? actor owner)
+
+  (when (dragging? owner)
       (let [state (om/get-state owner)
             drag-evts (drag-evts opts)
             loc   (vec (map + (location e) (:drag-offset state)))]

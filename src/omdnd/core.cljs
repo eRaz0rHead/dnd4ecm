@@ -15,11 +15,6 @@
             [omdnd.rightpane :as rightpane]
             [sablono.core :as html :refer [html] :include-macros true]
 
-            [goog.dom :as gdom]
-            [goog.fx.DragListGroup :as dlg]
-            [ goog.fx.DragListDirection :as dldir]
-            [goog.fx.DragDrop :as dd]
-
 
             )
   ;(:import [goog History]
@@ -31,8 +26,8 @@
 (def ENTER_KEY 13)
 
 (def app-state (atom {:actors  (util/generate-rnd-monsters 7)
-                      :current-init 0
-                      :current-round 0
+                      :current-init 10000
+                      :current-round 1
                       }
                      ))
 
@@ -61,9 +56,7 @@
                             (fn [app]
                               (second
                                (util/init-list (:actors app ) (:current-init app) (:current-order app)))))
-
-         is_new_round  (om/read next-actor #(= (first (util/sort-actors  (:actors app ))) %))
-        ]
+        is_new_round  (om/read next-actor #(= (first (util/sort-actors (util/active (:actors app )))) %))]
 
    (om/update! app assoc :current-init (om/read next-actor :init))
    (om/update! app assoc :current-order (om/read next-actor :order))
@@ -85,12 +78,11 @@
       (reify
       om/IWillMount
       (will-mount [_]
-                  (ux/setup-comms app owner {:command-handler handle-command}))
+                  (ux/setup-ux-master app owner {:command-handler handle-command}))
 
-      om/IRender
-      (render [_]
-              (let [state   (om/get-state owner)
-                    m       {:opts (ux/add-chans state {}) }]
+      om/IRenderState
+      (render-state [_ state]
+              (let [  m       {:opts (ux/add-chans state {}) }]
                 (dom/div #js { :id "main"}
 
                          (om/build initpane/initpane app m)

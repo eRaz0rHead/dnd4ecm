@@ -79,13 +79,11 @@
       (ux/drag-listeners owner next-props next-state opts))
 
 
-    om/IRender
-    (render [this]
-
+    om/IRenderState
+    (render-state [this state]
       (let [m {:owner owner :opts opts}
-            state (om/get-state owner)
             style (cond
-                    (ux/dragging? actor owner)
+                    (ux/dragging? owner)
                     (let [[x y] (:location state)
                           [w h] (:dimensions state)]
                       #js {:position "absolute"
@@ -100,7 +98,7 @@
             (html
              [:li.actor.draggable
               {
-               :className (when (ux/dragging? actor owner) "el_moving")
+               :className (when (ux/dragging? owner) "el_moving")
                :key id
                :style style
                :ref "drag-container"
