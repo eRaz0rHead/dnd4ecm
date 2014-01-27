@@ -35,7 +35,7 @@
 
     om/IDidMount
     (did-mount [t node]
-               (ux/register-dimensions owner opts "right-pane"  ));  (om/bind handle-drag app owner opts)))
+               (ux/register-dimensions owner opts "right-pane"  ));  #(handle-drag % app owner opts)))
 
 
     om/IDidUpdate

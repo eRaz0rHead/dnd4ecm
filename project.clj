@@ -6,7 +6,7 @@
                  [org.clojure/clojurescript "0.0-2138" ]
                  [org.clojure/core.async "0.1.267.0-0d7780-alpha" ]
 
-                 [om "0.2.3"]
+                 [om "0.3.0"]
                  [sablono "0.1.6"]
                  [com.facebook/react "0.8.0.1"]
                  ]

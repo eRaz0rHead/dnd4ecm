@@ -1,5 +1,15 @@
 ;;; TODO - drag-exit events : Right now, a component doesn't receive events for other components
 ;;; If a component responds to drag-over, it won't "revert" state until the drag ends.
+
+
+;; CHANGES for 0.2.3+
+;; OM now supports  :init-state,  :state,  :opts , and shared
+;; Idea :
+;;   put COMMAND chan into shared
+;;   dims-chan stays in OPTS (it's optional, and overridable)  -- also rename to bounds-chan
+;;   drag-evts might be in shared or stay in opts
+;;   disperser -- shared.
+
 (ns omdnd.ux
   (:require-macros
            [cljs.core.async.macros :refer [go alt!]]
@@ -79,7 +89,7 @@
 
 ;; TODO: remove this example handler
 (defn handle-drag-event [ {:keys [event drag-item] :as e} app  owner]
-  (let [id (om/read drag-item :id)]
+  (let [id (:id drag-item )]
     (om/set-state! owner :drag-event e)
     (case event
       :drop  (om/update! app assoc :messages (str  id  " > " event ))
@@ -109,7 +119,7 @@
            )))))
 
 
-(defn setup-bounds-chan [app owner opts]
+(defn setup-bounds-listener [app owner opts]
   (let [ dims-chan (chan) ]
     (om/set-state! owner [:chans :dims-chan] dims-chan )
       (go (while
@@ -178,6 +188,9 @@
            ]
 
       (om/set-state! owner :dimensions dims)
+      (om/set-state! owner :location
+          (element-offset container))
+
       (om/set-state! owner :bounds  new-bounds)
       (when event-handler
         (om/set-state! owner :drag-target-chan  (create-listener disperser owner event-handler)))
@@ -188,15 +201,15 @@
       )))
 
 (defn unregister-dimensions [owner opts ref-node]
- (let [state (om/get-state! owner)
-          listener (:drag-target-chan state)
-          source   (disperser opts)]
-      (untap disperser listener)
-      (close! listener)
-      (put! dims-chan {:component ref-node
-                      ; :bounding-chan drag-target-chan
-                       :dims nil
-                       })
+  (let [state (om/get-state! owner)
+        listener (:drag-target-chan state)
+        source   (disperser opts)]
+    (untap disperser listener)
+    (close! listener)
+    (put! dims-chan {:component ref-node
+                     ; :bounding-chan drag-target-chan
+                     :dims nil
+                     })
 
       ))
 
@@ -237,7 +250,7 @@
           drag-start (location e)
           el-offset (element-offset el)
           drag-offset (vec (map - el-offset drag-start))]
-        (prn "drag end!")
+        ; (prn "drag end!")
       (doto owner
         (om/set-state! :location nil)
         (om/set-state! :drag-offset nil)
@@ -253,7 +266,6 @@
 
 
 (defn drag [e actor owner opts]
-
   (when (dragging? owner)
       (let [state (om/get-state owner)
             drag-evts (drag-evts opts)
@@ -270,8 +282,8 @@
 
 (defn  drag-listeners [owner next-props next-state opts]
   (when (or (to? owner next-props next-state :dragging))
-        (let [mouse-up   (om/bind drag-end next-props owner opts)
-              mouse-move (om/bind drag next-props owner opts)]
+        (let [mouse-up   #(drag-end % @next-props owner opts)
+              mouse-move #(drag % @next-props owner opts)]
           (om/set-state! owner :window-listeners
             [mouse-up mouse-move])
           (doto js/window

@@ -106,9 +106,9 @@
                [:span.drag-handle
                 {
                  :ref "drag-handle"
-                 :onMouseDown (om/bind ux/drag-start actor owner opts)
-                 :onMouseUp (om/bind ux/drag-end actor owner opts)
-                 :onMouseMove (om/bind ux/drag actor owner opts)
+                 :onMouseDown #(ux/drag-start % @actor owner opts)
+                 :onMouseUp #(ux/drag-end  % @actor owner opts)
+                 :onMouseMove #(ux/drag % @actor owner opts)
                                    }
                 "⣿" ]
                [:div.vitals
@@ -123,8 +123,8 @@
                   (for [effect effects]  [:li effect]) ]]
                [:span.init-num {:contentEditable true
                                 ; :onFocus  (fn [e] (handle-focus e   ))
-                                :onKeyDown (om/bind handle-key-down actor m)
-                                :onBlur (om/bind handle-submit  actor m)
+                                :onKeyDown #(handle-key-down % actor m)
+                                :onBlur #(handle-submit % actor m)
                                  } init]
               ]
              )

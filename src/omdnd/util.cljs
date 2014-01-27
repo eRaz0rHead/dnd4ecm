@@ -94,17 +94,6 @@
   )
 
 
-(defn init-list [actors current-init current-order & [current-round]]
-  (let [sorted-list  (sort-by  (juxt :init #(- 0 (get % :order 0 )) :initBonus) #(compare %2 %1) (active actors))
-        lower        (filter #(< current-init (:init %)) sorted-list)
-        upper        (filter #(>=  current-init (:init %)) sorted-list)]
-    (if current-round
-      (vec (flatten (conj lower (new-round-marker current-round) upper)))
-      (vec (flatten (conj lower upper)))
-    )))
-
-
-
 
 (defn establish-order [actors]
   (let [init-groups (partition-by :init (sort-actors actors))]
@@ -135,3 +124,26 @@
       (vec (flatten (conj lower upper)))
     )))
 
+
+
+;;;;;;;;
+
+(defn index-of [x v]
+  (loop [i 0 v (seq v)]
+    (if v
+      (if (= x (first v))
+        i
+        (recur (inc i) (next v)))
+      -1)))
+
+(defn insert-at [x idx ignore v]
+  (let [len (count v)]
+    (loop [i 0 v v ret []]
+      (if (>= i len)
+        (conj ret x)
+        (let [y (first v)]
+          (if (= y ignore)
+            (recur i (next v) (conj ret y))
+            (if (== i idx)
+              (into (conj ret x) v)
+              (recur (inc i) (next v) (conj ret y)))))))))

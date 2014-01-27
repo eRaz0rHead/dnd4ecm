@@ -32,7 +32,7 @@
                        (dom/div #js {:className "turn-marker"}
                                 "Start of Turn")
                        (dom/div #js {:className "action-button"
-                                     :onClick (om/bind next-turn app owner opts)}
+                                     :onClick #(next-turn % app owner opts)}
                                 "Next Turn"
                                 ))
 

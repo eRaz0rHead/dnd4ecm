@@ -51,25 +51,23 @@
   (om/update! app assoc :messages (str  " TO COMBAT > " ids ))
   (set-actors-value ids app :reserved nil))
 
-(defn handle-next-turn [app owner]
-  (let [next-actor (om/read app
-                            (fn [app]
-                              (second
-                               (util/init-list (:actors app ) (:current-init app) (:current-order app)))))
-        is_new_round  (om/read next-actor #(= (first (util/sort-actors (util/active (:actors app )))) %))]
+(defn handle-next-turn [app ]
+  (let [next-actor  (second  (util/init-list (:actors @app ) (:current-init @app) (:current-order @app)))
+        is_new_round  (= (first (util/sort-actors (util/active (:actors @app ))))   next-actor)]
 
-   (om/update! app assoc :current-init (om/read next-actor :init))
-   (om/update! app assoc :current-order (om/read next-actor :order))
+   (om/update! app assoc :current-init  (:init next-actor ))
+   (om/update! app assoc :current-order (:order next-actor ))
    (when is_new_round
-      (om/update! app assoc :current-round (inc (:current-round @app-state))))
+      (om/update! app assoc :current-round (inc (:current-round @app))))
   ))
+
 
 (defn handle-command [{:keys [event actors] :as e} app  owner]
     (om/set-state! owner :command-event e)
     (case event
-      :next-turn (handle-next-turn  app owner)
-      :reserve  (set-reserved (set (map #(om/read % :id) actors)) app)
-      :to-init  (add-to-init (set (map #(om/read % :id) actors)) app)
+      :next-turn (handle-next-turn  app)
+      :reserve  (set-reserved (set (map #(:id %) actors)) app)
+      :to-init  (add-to-init (set (map #(:id %) actors)) app)
       )
   )
 
