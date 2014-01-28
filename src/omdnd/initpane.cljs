@@ -71,16 +71,26 @@
       (when (not= (:drop-index state) drop-index)
         (doto owner
           (om/set-state! :drop-index drop-index)
-          (om/set-state! :dragging (:id item))
+          (om/set-state! :dragging item)
           ))))
 ;)
 
-(defn handle-drop [owner e]
+(defn handle-drop [{:keys [actors current-init current-order current-round] :as app}  owner opts e]
+  (when-let [command-chan (ux/command-chan opts)]
+    (let [state (om/get-state owner)
+        next-idx (:drop-index state)
+        next-item (nth  (util/init-list actors current-init current-order current-round) next-idx)
+        dropped-item (:drag-item e)
+        updated-item (assoc dropped-item :init (:init next-item))]
+      (om/set-state! owner :drop-index nil)
+      (prn updated-item)
+      (put! command-chan {:event :to-init :actors [updated-item]})
+      )
   (doto owner
      ;  update init based on drop index
     (om/set-state! :drop-index nil)
 
-    ))
+    )))
 
 
 
@@ -90,7 +100,7 @@
 
     (let [state (om/get-state owner)
           drop-index (:drop-index state)
-          drag-id(:dragging state)]
+          drag-id (:id (:dragging state))]
 
       (util/insert-at ::spacer drop-index drag-id init-list))
     init-list))
@@ -100,12 +110,12 @@
 (defn handle-init-drag [e app owner opts]
   (when-let [command-chan (ux/command-chan opts)]
      (case (:event e)
-      :drag-start  (om/set-state! owner :dragging (:drag-item e))
+      :drag-start (update-drag owner e)
       :drag-end (do (om/set-state! owner :drag-hover nil) (om/set-state! owner :dragging nil) )
       :dragging (update-drag owner e)
       :drop (do
-              (handle-drop owner e)
-              (put! command-chan {:event :to-init :actors [(:drag-item e)]})
+              (handle-drop @app owner opts e)
+
              ))))
 
 (defn sortable-spacer [height]
@@ -132,6 +142,7 @@
     (render-state [_ state]
             (dom/div #js {:id "init-list" :ref "init-list" }
                      ; (str (om/get-state owner))
+                    ; (prn (:dragging state))
                      (dom/ul  nil ;#js {:id "init-list" :ref "init-list" }
                               (dom/li  #js { :className "round_marker"} (str "Current Round:" current-round))
                               (apply dom/ul #js {:className "sortable" :ref "sortable"}

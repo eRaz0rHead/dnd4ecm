@@ -41,15 +41,23 @@
                                      (dissoc % k))
                                    %) actors)))))
 
-
+(defn merge-actors-value [to-merge app ]
+  (om/transact! app  :actors
+                (fn [actors]
+                  (into [] (map #(merge %2 %1)
+                              (sort-by :id actors) (sort-by :id to-merge))))))
 
 (defn set-reserved [ids app]
   (om/update! app assoc :messages (str  " reserved > " ids ))
   (set-actors-value ids app :reserved "true"))
 
-(defn add-to-init [ids app]
-  (om/update! app assoc :messages (str  " TO COMBAT > " ids ))
-  (set-actors-value ids app :reserved nil))
+
+
+(defn add-to-init [actors app]
+  (om/update! app assoc :messages (str  " TO COMBAT > " (map :id actors)  (first (map :init actors))))
+
+  (set-actors-value (vec (map :id actors)) app :reserved nil)
+  (set-actors-value (vec (map :id actors)) app :init (first (map :init actors))))
 
 (defn handle-next-turn [app ]
   (let [next-actor  (second  (util/init-list (:actors @app ) (:current-init @app) (:current-order @app)))
@@ -67,7 +75,7 @@
     (case event
       :next-turn (handle-next-turn  app)
       :reserve  (set-reserved (set (map #(:id %) actors)) app)
-      :to-init  (add-to-init (set (map #(:id %) actors)) app)
+      :to-init  (add-to-init actors app)
       )
   )
 

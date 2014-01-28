@@ -37,7 +37,7 @@
       (.addRange sel rng)
     ))
 
-(defn handle-submit [e {:keys [id init] :as actor} {:keys [owner] :as opts}]
+(defn handle-submit [e actor {:keys [owner] :as opts}]
   (om/set-state! owner [:init] (- (.. e -target -textContent) 0))
   (when-let [edit-text (om/get-state owner [:init])]
       ;(do
@@ -48,17 +48,19 @@
 
  false)
 
-(defn handle-key-down [e {:keys [init] :as actor} {:keys [owner] :as opts}]
+(defn handle-key-down [e actor {:keys [owner] :as opts}]
   (let [kc (.-keyCode e)]
     (cond
      (identical? kc ESCAPE_KEY)
        (do
-         (om/set-state! owner [:init] init)
+         (om/set-state! owner [:init] (:init actor))
          ;   (put! (:comm opts) [:cancel actor])
          )
 
      (identical? kc ENTER_KEY)
-         (handle-submit e actor opts)
+         (do
+           (.preventDefault e)
+           (handle-submit e actor opts))
 
      (and (< kc 91) (> kc 57))
          (.preventDefault e)
