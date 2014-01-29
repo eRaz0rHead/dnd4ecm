@@ -73,14 +73,33 @@
         (om/set-state! :dragging item)
         ))))
 
+(defn avg [n m]
+  (/ (+ n m) 2))
+
+(defn insert-between [actor p n]
+  ;PREREQ  :init a >= :init b
+  ;Assumes p and n are adjacent .. have no other intervening elements.
+  (cond
+    ; insert at end of list. 
+    (nil? n)  
+        [ (merge actor {:init (dec (:init p)) :order 1 })  p ]   
+    ; update the ordering of all three elements
+    (= (:init p) (:init n))
+        [ (merge actor {:init (:init n) :order (inc (:order n))}) p n ]
+    ; average the initiatives.
+    :else
+       [ (merge actor {:init (avg (:init p) (:init n))  :order (:order 1)}) p n ]
+   ))
 
 (defn handle-drop [{:keys [actors current-init current-order current-round] :as app}  owner opts e]
   (when-let [command-chan (ux/command-chan opts)]
     (let [state (om/get-state owner)
           next-idx (:drop-index state)
-          next-item (nth  (util/init-list actors current-init current-order current-round) next-idx)
+          initiative (util/init-list actors current-init current-order current-round) 
+          next-item (nth initiative  next-idx nil)
+          prev-item (nth initiative (dec next-idx) nil)
           dropped-item (:drag-item e)
-          updated-item (merge dropped-item {:init (:init next-item)  :order (inc (:order next-item ))})]
+          ]
       (om/set-state! owner :drop-index nil)
       (put! command-chan {:event :to-init :actors [updated-item]})
       )))
