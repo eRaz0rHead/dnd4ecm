@@ -53,7 +53,7 @@
                      (om/build-all act/actor-init-item (util/reserved actors)
                                    {:opts opts :key :id}
                                    ))
-            ; bind mouse-up to handle-reserve-drop here. (or see below)
+
             ))))
 
 
@@ -61,67 +61,53 @@
   (vec (map - v2 v1)))
 
 (defn update-drag [owner e]
- ; (when (ux/dragging? owner)
-    (let [loc    (:location e)
-          item   (:drag-item e)
-          state  (om/get-state owner)
-          [_ y]  (from-loc (:location state) loc)
-          [_ ch] (:cell-dimensions state)
-          drop-index (js/Math.round (/ y ch))]
-      (when (not= (:drop-index state) drop-index)
-        (doto owner
-          (om/set-state! :drop-index drop-index)
-          (om/set-state! :dragging item)
-          ))))
-;)
+  (let [loc    (:location e)
+        item   (:drag-item e)
+        state  (om/get-state owner)
+        [_ y]  (from-loc (:location state) loc)
+        [_ ch] (:cell-dimensions state)
+        drop-index (js/Math.round (/ y ch))]
+    (when (not= (:drop-index state) drop-index)
+      (doto owner
+        (om/set-state! :drop-index drop-index)
+        (om/set-state! :dragging item)
+        ))))
+
 
 (defn handle-drop [{:keys [actors current-init current-order current-round] :as app}  owner opts e]
   (when-let [command-chan (ux/command-chan opts)]
     (let [state (om/get-state owner)
-        next-idx (:drop-index state)
-        next-item (nth  (util/init-list actors current-init current-order current-round) next-idx)
-        dropped-item (:drag-item e)
-        updated-item (assoc dropped-item :init (:init next-item))]
+          next-idx (:drop-index state)
+          next-item (nth  (util/init-list actors current-init current-order current-round) next-idx)
+          dropped-item (:drag-item e)
+          updated-item (merge dropped-item {:init (:init next-item)  :order (inc (:order next-item ))})]
       (om/set-state! owner :drop-index nil)
-      (prn updated-item)
       (put! command-chan {:event :to-init :actors [updated-item]})
-      )
-  (doto owner
-     ;  update init based on drop index
-    (om/set-state! :drop-index nil)
-
-    )))
+      )))
 
 
-
-(defn sorting-state [init-list owner]
-
-  (if  (ux/dragging? owner)
-
-    (let [state (om/get-state owner)
-          drop-index (:drop-index state)
-          drag-id (:id (:dragging state))]
-
-      (util/insert-at ::spacer drop-index drag-id init-list))
-    init-list))
-
-; TODO : recalculate INITIATIVE based on drop position.
-; Q?   : live-recalc init based on ordering, or only when dropped.
 (defn handle-init-drag [e app owner opts]
   (when-let [command-chan (ux/command-chan opts)]
-     (case (:event e)
+    (case (:event e)
       :drag-start (update-drag owner e)
       :drag-end (do (om/set-state! owner :drag-hover nil) (om/set-state! owner :dragging nil) )
       :dragging (update-drag owner e)
-      :drop (do
-              (handle-drop @app owner opts e)
-
-             ))))
+      :drop  (handle-drop @app owner opts e)
+      )))
 
 (defn sortable-spacer [height]
   (dom/li
     #js {:key "spacer-cell"
          :style #js {:height height}}))
+
+
+(defn sorting-state [init-list owner]
+  (if  (ux/dragging? owner)
+    (let [state (om/get-state owner)
+          drop-index (:drop-index state)
+          drag-id (:id (:dragging state))]
+      (util/insert-at ::spacer drop-index drag-id init-list))
+    init-list))
 
 (defn init-list [{:keys [actors current-init current-order current-round] :as app} owner opts]
   (reify
@@ -163,10 +149,7 @@
                            ; (dom/div #js {:id "drag-pane" } "opts=" (str  state) )
                            (om/build init-list app
                                      {:opts opts
-                                      :init-state  {
-                                                    ;:sort (util/init-list actors current-init current-order current-round)
-                                                    :cell-dimensions [180 73]}
-
+                                      :init-state  {  :cell-dimensions [180 73]}
                                       })
                            (om/build reserve-list app
                                      {:opts  opts}

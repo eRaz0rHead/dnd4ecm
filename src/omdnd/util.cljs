@@ -56,7 +56,7 @@
         initRoll  (apply + (die 1 20))
         totalhps  (apply + 50 (die 7 10))]
     {:id id
-     :order  id
+     ;:order nil
      :name (str "Actor #" id)
      :initBonus initBonus
      :initRoll initRoll
@@ -90,9 +90,8 @@
   (s/difference (set actors)  (s/union (set (reserved actors)) (set (dead actors)))))
 
 (defn sort-actors [actors]
-  (sort-by (juxt :init #(- 0 (get % :order 0 )) :initBonus) #(compare %2 %1) (active actors))
+  (sort-by (juxt :init #(+ 0 (get % :order 0 )) :initBonus) #(compare %2 %1) (active actors))
   )
-
 
 
 (defn establish-order [actors]
@@ -100,7 +99,7 @@
     (vec (flatten  (map (fn[group]
                      (map-indexed (fn [idx member]
                                     (if-not (:order member)
-                                      (assoc member :order idx))) group))
+                                      (assoc member :order (- (count group) idx)))) group))
                    init-groups)
 
               ))))

@@ -11,10 +11,7 @@
 
             [omdnd.util :as util]
             [omdnd.ux :as ux]
-
             [omdnd.meter :as meter]
-
-
             [goog.style :as gstyle]
             )
 
@@ -68,7 +65,7 @@
   ))
 
 
-(defn actor-init-item [{:keys [id name init initBonus initRoll hps totalhps tmp effects powers new_round] :as actor} owner opts]
+(defn actor-init-item [{:keys [id name init initBonus initRoll hps totalhps tmp effects powers new_round order] :as actor} owner opts]
   (reify
 
     om/IDidMount
@@ -116,7 +113,7 @@
                [:div.vitals
                 [:span.name  name  ]
 
-               ; [:span.state (str state)]
+                ; [:span " [" order "] "]
 
                 (if (:immediate powers) [:span.actions "immediate!" ])
                 (meter/meter hps tmp totalhps)]

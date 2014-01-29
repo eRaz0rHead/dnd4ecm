@@ -25,7 +25,7 @@
 
 (def ENTER_KEY 13)
 
-(def app-state (atom {:actors  (util/generate-rnd-monsters 7)
+(def app-state (atom {:actors  (util/establish-order (util/generate-rnd-monsters 7))
                       :current-init 10000
                       :current-round 1
                       }
@@ -48,16 +48,25 @@
                               (sort-by :id actors) (sort-by :id to-merge))))))
 
 (defn set-reserved [ids app]
+  (prn ids)
   (om/update! app assoc :messages (str  " reserved > " ids ))
   (set-actors-value ids app :reserved "true"))
 
 
 
 (defn add-to-init [actors app]
-  (om/update! app assoc :messages (str  " TO COMBAT > " (map :id actors)  (first (map :init actors))))
+  (om/update! app assoc :messages (str  " TO COMBAT > " (set (map :id actors))  (first (map :init actors))))
+  (let [ids (set (map :id actors))
+        next-init (first (map :init actors))
+         next-order (first (map :order actors))
+       ]
+    (prn next-init  ids)
+    (set-actors-value ids app :init next-init)
+     (set-actors-value ids app :order next-order)
+    (set-actors-value ids app :reserved nil)
 
-  (set-actors-value (vec (map :id actors)) app :reserved nil)
-  (set-actors-value (vec (map :id actors)) app :init (first (map :init actors))))
+    ))
+
 
 (defn handle-next-turn [app ]
   (let [next-actor  (second  (util/init-list (:actors @app ) (:current-init @app) (:current-order @app)))

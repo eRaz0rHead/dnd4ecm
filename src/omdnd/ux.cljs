@@ -280,7 +280,7 @@
 
 
 
-(defn  drag-listeners [owner next-props next-state opts]
+(defn drag-listeners [owner next-props next-state opts]
   (when (or (to? owner next-props next-state :dragging))
         (let [mouse-up   #(drag-end % @next-props owner opts)
               mouse-move #(drag % @next-props owner opts)]
