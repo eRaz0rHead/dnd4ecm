@@ -80,9 +80,9 @@
   ;PREREQ  :init a >= :init b
   ;Assumes p and n are adjacent .. have no other intervening elements.
   (cond
-    ; insert at end of list. 
-    (nil? n)  
-        [ (merge actor {:init (dec (:init p)) :order 1 })  p ]   
+    ; insert at end of list.
+    (nil? n)
+        [ (merge actor {:init (dec (:init p)) :order 1 })  p ]
     ; update the ordering of all three elements
     (= (:init p) (:init n))
         [ (merge actor {:init (:init n) :order (inc (:order n))}) p n ]
@@ -95,13 +95,13 @@
   (when-let [command-chan (ux/command-chan opts)]
     (let [state (om/get-state owner)
           next-idx (:drop-index state)
-          initiative (util/init-list actors current-init current-order current-round) 
+          initiative (util/init-list actors current-init current-order current-round)
           next-item (nth initiative  next-idx nil)
           prev-item (nth initiative (dec next-idx) nil)
           dropped-item (:drag-item e)
           ]
       (om/set-state! owner :drop-index nil)
-      (put! command-chan {:event :to-init :actors [updated-item]})
+      (put! command-chan {:event :to-init :actors (insert-between dropped-item prev-item next-item)})
       )))
 
 

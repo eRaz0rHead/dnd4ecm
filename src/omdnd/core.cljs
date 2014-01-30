@@ -35,17 +35,42 @@
 (defn set-actors-value [ids app k v]
   (om/transact! app  :actors
                 (fn [actors]
-                  (into [] (map #(if (contains? ids (:id %))
+                  (into [] (map #(if (some #{(:id %)} ids )
                                    (if-not (nil?  v)
                                      (assoc % k v)
                                      (dissoc % k))
                                    %) actors)))))
 
-(defn merge-actors-value [to-merge app ]
+(defn by-id [id actors]
+  (filter #(= (:id %) id) actors))
+
+(defn replace-actors [to-replace actors]
+  (let [ids (vec (map :id to-replace))]
+    (map (fn [actor]
+           (let [id (:id actor)]
+             (if  (some #{id} ids)
+               (do
+                 (prn "replacing actor:" id  " with  "   (by-id id to-replace))
+                   (merge actor (by-id id to-replace)))
+
+               actor
+               )))
+           actors)))
+
+
+
+(defn replace-actors-state [to-replace app]
   (om/transact! app  :actors
                 (fn [actors]
-                  (into [] (map #(merge %2 %1)
-                              (sort-by :id actors) (sort-by :id to-merge))))))
+                  (into []  (replace-actors to-replace actors)
+                        ))))
+
+
+
+
+
+
+
 
 (defn set-reserved [ids app]
   (prn ids)
@@ -60,9 +85,9 @@
         next-init (first (map :init actors))
          next-order (first (map :order actors))
        ]
-    (prn next-init  ids)
-    (set-actors-value ids app :init next-init)
-     (set-actors-value ids app :order next-order)
+    ;(set-actors-value ids app :init next-init)
+    ;(set-actors-value ids app :order next-order)
+    (replace-actors-state actors app)
     (set-actors-value ids app :reserved nil)
 
     ))
