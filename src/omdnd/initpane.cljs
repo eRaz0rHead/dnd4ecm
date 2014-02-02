@@ -45,16 +45,15 @@
 
     om/IRenderState
     (render-state [this state]
-            (dom/div #js {:id  "reserve-list" :ref "reserve-list"
-                         :className (when (:drag-hover state) "drag-hover")
-                          }
+                  (dom/div #js {:id  "reserve-list" :ref "reserve-list"
+                                :className (when (:drag-hover state) "drag-hover")
+                                }
+                           (dom/ul  nil ; #js {:id  "reserve-list" :ref   "reserve-list"}
+                                    (om/build-all act/actor-init-item (util/reserved actors)
+                                                  {:opts opts :key :id}
+                                                  ))
 
-            (dom/ul  nil ; #js {:id  "reserve-list" :ref   "reserve-list"}
-                     (om/build-all act/actor-init-item (util/reserved actors)
-                                   {:opts opts :key :id}
-                                   ))
-
-            ))))
+                           ))))
 
 
 (defn from-loc [v1 v2]
@@ -76,30 +75,26 @@
 (defn avg [n m]
   (/ (+ n m) 2))
 
-(defn insert-between [actor p n]
-  ;PREREQ  :init a >= :init b
-  ;Assumes p and n are adjacent .. have no other intervening elements.
-  (cond
-    ; insert at end of list.
-    (nil? n)
-        [ (merge actor {:init (dec (:init p)) :order 1 })  p ]
-    ; update the ordering of all three elements
-    (= (:init p) (:init n))
-        [ (merge actor {:init (:init n) :order (inc (:order n))}) p n ]
-    ; average the initiatives.
-    :else
-       [ (merge actor {:init (avg (:init p) (:init n))  :order (:order 1)}) p n ]
-   ))
 
-(defn handle-drop [{:keys [actors current-init current-order current-round] :as app}  owner opts e]
+(defn insert-between [actor p n]
+  (if (nil? n)
+    [ (merge actor {:init (:init p) :order (- (:order p) 0.5) }) p ]
+
+    [ (merge actor {:init (:init n) :order (+ (:order n) 0.5) }) p n ]
+    ))
+
+
+(defn handle-drop [{:keys [actors current-init current-order] :as app}  owner opts e]
   (when-let [command-chan (ux/command-chan opts)]
     (let [state (om/get-state owner)
           next-idx (:drop-index state)
-          initiative (util/init-list actors current-init current-order current-round)
+          initiative (util/init-list actors current-init current-order)
           next-item (nth initiative  next-idx nil)
-          prev-item (nth initiative (dec next-idx) nil)
+          prev-idx (min (dec next-idx) (dec (count initiative)))
+          prev-item (nth initiative prev-idx nil)
           dropped-item (:drag-item e)
           ]
+      (prn "prev " prev-item "next " next-item)
       (om/set-state! owner :drop-index nil)
       (put! command-chan {:event :to-init :actors (insert-between dropped-item prev-item next-item)})
       )))
@@ -115,10 +110,8 @@
       )))
 
 (defn sortable-spacer [height]
-  (dom/li
-    #js {:key "spacer-cell"
-         :style #js {:height height}}))
-
+  (dom/li #js {:key "spacer-cell"
+               :style #js {:height height}}))
 
 (defn sorting-state [init-list owner]
   (if  (ux/dragging? owner)
@@ -146,17 +139,15 @@
     om/IRenderState
     (render-state [_ state]
             (dom/div #js {:id "init-list" :ref "init-list" }
-                     ; (str (om/get-state owner))
-                    ; (prn (:dragging state))
-                     (dom/ul  nil ;#js {:id "init-list" :ref "init-list" }
-                              (dom/li  #js { :className "round_marker"} (str "Current Round:" current-round))
+                     (dom/ul  nil
+                              (dom/li #js { :className "round_marker"} (str "Current Round:" current-round))
                               (apply dom/ul #js {:className "sortable" :ref "sortable"}
                                      (map
                                       (fn [actor]
                                         (if-not (= actor ::spacer)
                                           (om/build act/actor-init-item actor {:opts opts :key :id} )
                                           (sortable-spacer (second (:cell-dimensions state)))))
-                                      ( sorting-state (util/init-list actors current-init current-order current-round) owner))))))
+                                      (sorting-state (util/init-list actors current-init current-order current-round) owner))))))
 
     ))
 

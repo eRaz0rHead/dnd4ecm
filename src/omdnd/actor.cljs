@@ -34,30 +34,29 @@
       (.addRange sel rng)
     ))
 
-(defn handle-submit [e actor {:keys [owner] :as opts}]
+(defn handle-submit [e actor owner opts]
   (om/set-state! owner [:init] (- (.. e -target -textContent) 0))
   (when-let [edit-text (om/get-state owner [:init])]
-      ;(do
-        (om/update! actor #(assoc % :init edit-text))
-        ;(put! comm [:save-init actor])
-   ;; Current Bug seems to be that onBlur and Enter Key pressed are behaving slightly differently.
-    )
+    (when-let [command-chan (ux/command-chan opts)]
+      (put! command-chan {:event :to-init :actors  [(assoc @actor :init edit-text)]})))
+  false)
 
- false)
-
-(defn handle-key-down [e actor {:keys [owner] :as opts}]
+(defn handle-key-down [e actor owner opts]
   (let [kc (.-keyCode e)]
     (cond
      (identical? kc ESCAPE_KEY)
        (do
-         (om/set-state! owner [:init] (:init actor))
+         (om/set-state! owner [:init] (:init @actor))
+           ; (.. e -target -setTextContent (:init @actor) )
          ;   (put! (:comm opts) [:cancel actor])
+         ; (.. e -target -setTextContent (:init @actor) )
+           (.blur (.. e -target))
          )
 
      (identical? kc ENTER_KEY)
          (do
            (.preventDefault e)
-           (handle-submit e actor opts))
+           (handle-submit e actor owner opts))
 
      (and (< kc 91) (> kc 57))
          (.preventDefault e)
@@ -113,7 +112,7 @@
                [:div.vitals
                 [:span.name  name  ]
 
-                ; [:span " [" order "] "]
+                [:span " [" order "] "]
 
                 (if (:immediate powers) [:span.actions "immediate!" ])
                 (meter/meter hps tmp totalhps)]
@@ -122,8 +121,8 @@
                   (for [effect effects]  [:li effect]) ]]
                [:span.init-num {:contentEditable true
                                 ; :onFocus  (fn [e] (handle-focus e   ))
-                                :onKeyDown #(handle-key-down % actor m)
-                                :onBlur #(handle-submit % actor m)
+                                :onKeyDown #(handle-key-down % actor owner opts)
+                                :onBlur #(handle-submit % actor owner opts)
                                  } init]
               ]
              )

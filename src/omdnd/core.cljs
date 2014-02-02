@@ -50,14 +50,12 @@
            (let [id (:id actor)]
              (if  (some #{id} ids)
                (do
-                 (prn "replacing actor:" id  " with  "   (by-id id to-replace))
+                 ;(prn "replacing actor:" id  " with  "   (by-id id to-replace))
                    (merge actor (by-id id to-replace)))
 
                actor
                )))
            actors)))
-
-
 
 (defn replace-actors-state [to-replace app]
   (om/transact! app  :actors
@@ -66,31 +64,11 @@
                         ))))
 
 
-
-
-
-
-
-
-(defn set-reserved [ids app]
-  (prn ids)
-  (om/update! app assoc :messages (str  " reserved > " ids ))
-  (set-actors-value ids app :reserved "true"))
-
-
-
-(defn add-to-init [actors app]
-  (om/update! app assoc :messages (str  " TO COMBAT > " (set (map :id actors))  (first (map :init actors))))
-  (let [ids (set (map :id actors))
-        next-init (first (map :init actors))
-         next-order (first (map :order actors))
-       ]
-    ;(set-actors-value ids app :init next-init)
-    ;(set-actors-value ids app :order next-order)
-    (replace-actors-state actors app)
-    (set-actors-value ids app :reserved nil)
-
-    ))
+ (defn normalize-order [ app]
+  (om/transact! app  :actors
+                (fn [actors]
+                  (into []  (util/establish-order actors)
+                        ))))
 
 
 (defn handle-next-turn [app ]
@@ -103,6 +81,19 @@
       (om/update! app assoc :current-round (inc (:current-round @app))))
   ))
 
+(defn set-reserved [ids app]
+  (prn ids)
+  (om/update! app assoc :messages (str  " reserved > " ids ))
+  (set-actors-value ids app :reserved "true"))
+
+(defn add-to-init [actors app]
+  (om/update! app assoc :messages (str  " TO COMBAT > " (set (map :id actors))  (first (map :init actors))))
+  (let [ids (set (map :id actors))]
+    (replace-actors-state actors app)
+    (set-actors-value ids app :reserved nil)
+    (normalize-order app)
+    (om/update! app assoc :current-order (max (map :order  (filter #(= (:current-init @app) (:init %)) actors ))))
+    ))
 
 (defn handle-command [{:keys [event actors] :as e} app  owner]
     (om/set-state! owner :command-event e)

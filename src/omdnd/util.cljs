@@ -90,24 +90,23 @@
   (s/difference (set actors)  (s/union (set (reserved actors)) (set (dead actors)))))
 
 (defn sort-actors [actors]
-  (sort-by (juxt :init #(+ 0 (get % :order 0 )) :initBonus) #(compare %2 %1) (active actors))
+  (sort-by (juxt :init #(+ 0 (get % :order 0 )) :initBonus) #(compare %2 %1) actors)
   )
 
 
 (defn establish-order [actors]
   (let [init-groups (partition-by :init (sort-actors actors))]
     (vec (flatten  (map (fn[group]
-                     (map-indexed (fn [idx member]
-                                    (if-not (:order member)
-                                      (assoc member :order (- (count group) idx)))) group))
-                   init-groups)
-
-              ))))
+                          (map-indexed (fn [idx member]
+                                         (assoc member :order (- (count group) idx)))
+                                       (sort-by (juxt :order :initBonus) #(compare %2 %1) group)))
+                        init-groups)
+                   ))))
 
 (defn lower-list [current-init current-order]
   (fn [actor]
     (if (=  current-init (:init actor))
-      (> current-order (get actor :order 0))
+      (< current-order (get actor :order 0))
       (if (< current-init (:init actor))
         true
         false)
@@ -115,7 +114,7 @@
 
 
 (defn init-list [actors current-init current-order & [current-round]]
-  (let [sorted-list (sort-actors  actors)
+  (let [sorted-list (sort-actors  (active actors))
         lower       (filter #((lower-list current-init current-order) %) sorted-list)
         upper       (filter #((complement (lower-list current-init current-order)) %) sorted-list)]
     (if current-round

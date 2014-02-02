@@ -102,8 +102,11 @@ span.state {
 }
 
 #reserve-list .actor {
-
   background:lightgrey;
+}
+
+#reserve-list [contenteditable=true] {
+  display:none;
 }
 
 

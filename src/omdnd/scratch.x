@@ -3,7 +3,22 @@
 
 
 
+(defn insert-between [actor p n]
+  ;PREREQ  :init p >= :init n
+  ;Assumes p and n are adjacent .. have no intervening elements.
+  (cond
+   (nil? n)
+   [ (merge actor {:init  (:init p)  :order 1 })  p ]
+   ; update the ordering of all three elements
+   (nil? p)
+   [ (merge actor {:init (:init n) :order (inc (:order n))  })  n ]
 
+   (= (:init p) (:init n))
+   (let [order (inc (:order n))]
+     [ (merge actor {:init (:init n) :order order }) (merge p {:order (inc order)}) n ])
+   :else
+   [ (merge actor {:init (:init n) :order (inc (:order n))}) p n ]
+   ))
 
 
 (swap! app-state update-in [:todos]
