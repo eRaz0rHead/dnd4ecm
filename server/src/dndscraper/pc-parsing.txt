@@ -1,0 +1,18 @@
+<StatBlock>
+ 	<Stat value="23">	
+    	<alias name="Strength"></alias>
+		<alias name="STR"></alias>
+		<statadd value="17"></statadd>
+	</Stat>
+	<Stat value="6">
+		<alias name="Strength modifier"></alias>
+  
+	<Stat value="31">
+		<alias name="AC"></alias>
+            
+            
+	<Stat value="20">
+		<alias name="Level"></alias>
+    
+  
+  	= :StatBlock :Stat :alias

@@ -1,0 +1,143 @@
+
+
+/*
+$primary-1:#0D58A6;
+$primary-2:#26517C;
+$primary-3:#04376C;
+$primary-4:#4188D2;
+$primary-5:#689CD2;
+
+$secondary-a-1:#2818B1;
+$secondary-a-2:#382F85;
+$secondary-a-3:#130873;
+$secondary-a-4:#5B4CD8;
+$secondary-a-5:#7C71D8;
+
+$secondary-b-1:#FFC700;
+$secondary-b-2:#BFA030;
+$secondary-b-3:#A68100;
+$secondary-b-4:#FFD540;
+$secondary-b-5:#FFE073;
+
+$complement-1:#FF9900;
+$complement-2:#BF8630;
+$complement-3:#A66300;
+$complement-4:#FFB240;
+$complement-5:#FFC773;
+
+*/
+
+
+$primary-1 : #04275E;
+$primary-2 : #12284C;
+$primary-3 : #021B44;
+$primary-4 : #26549F;
+$primary-5 : #3E639F;
+
+$secondary-a-1 : #0C0764;
+$secondary-a-2 : #181450;
+$secondary-a-3 : #070348;
+$secondary-a-4 : #302AA2;
+$secondary-a-5 : #4742A2;
+
+$secondary-b-1 : #015057;
+$secondary-b-2 : #0E4146;
+$secondary-b-3 : #00393F;
+$secondary-b-4 : #20909A;
+$secondary-b-5 : #38929A;
+
+$complement-1 : #8F5B00;
+$complement-2 : #725117;
+$complement-3 : #674100;
+$complement-4 : #BC8526;
+$complement-5 : #BC9044;
+
+
+/*
+$primary-1:#0A1D5C ;
+$primary-2 : #19213F ;
+$primary-3:#020E33;
+$primary-4:#2A4398;
+$primary-5:#3E5398;
+
+$secondary-a-1:#35065B;
+$secondary-a-2:#2D163F;
+$secondary-a-3:#1D0133;
+$secondary-a-4:#642497;
+$secondary-a-5:#6D3997;
+
+$secondary-b-1:#005E33;
+$secondary-b-2:#14402C;
+$secondary-b-3:#00341D;
+$secondary-b-4:#1C9960;
+$secondary-b-5:#33996B;
+
+$complement-1:#885E00;
+$complement-2:#5D491D;
+$complement-3:#4C3400;
+$complement-4:#B48621;
+$complement-5:#B48E3B;
+
+*/
+
+$base-bg : darken($primary-3, 5%);
+$title-color: lighten($complement-3, 20%);
+$shadow-color: $secondary-b-3;
+$pane-bg: adjust-color( $complement-5, $lightness:25%, $saturation:-20%);
+
+
+//$btn-bg-top: adjust-color($complement-5,  $lightness:10%, $saturation:-5%);
+//$btn-bg-bottom: adjust-color($complement-1, $lightness:5%, $saturation:30%);
+
+// $btn-bg-top: adjust-color($secondary-b-5,  $lightness:50%, $saturation:-5%);
+// $btn-bg-bottom: adjust-color($secondary-b-5, $lightness:-25%, $saturation:30%);
+
+
+$btn-bg-top: adjust-color($secondary-b-4,  $lightness:20%, $saturation:-5%);
+$btn-bg-bottom: adjust-color($secondary-b-3, $lightness:5%, $saturation:30%);
+
+
+$btn-gradient: linear-gradient($btn-bg-top, $btn-bg-bottom) ;
+$btn-gradient-ltr: linear-gradient(left, $btn-bg-top, $btn-bg-bottom) ;
+$btn-gradient-rtl: linear-gradient(right, $btn-bg-top, $btn-bg-bottom) ;
+// $btn-gradient-hilight: linear-gradient($btn-bg-top, $btn-bg-bottom) ;
+
+
+
+.std-btn {
+	display:inline-block;
+	background-color:#eee;
+	background-size:contain;
+	border:1px solid $secondary-b-1;
+	@include border-radius(5px);
+	// @include box-shadow(2px 2px 1px 0px $primary-2  );
+	&:hover {
+			@include box-shadow(0px 0px 3px 0px $btn-bg-bottom inset );
+	}
+	&:active {
+		@include box-shadow(0px 0px 3px 1px $btn-bg-bottom inset );
+	}
+}
+.std-btn.disabled {
+	opacity:0.2;
+	@include box-shadow(0px 0px 4px 2px $btn-bg-bottom inset );
+}
+
+.icon-btn {
+	@extend .std-btn;
+	height:1.8em; 
+	width:1.8em;
+}
+
+$pane-width:350px;
+
+@mixin pane() {
+  background-color: $pane-bg;
+  //min-width:$pane-width *1.25;
+  @include box-flex(1);
+  box-sizing:border-box;
+  padding:0px;
+  border: 1px solid $base-bg;
+  margin-left: 1px;
+  overflow:hidden;
+}

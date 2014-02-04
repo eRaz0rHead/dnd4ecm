@@ -46,6 +46,7 @@
 
 
 
+
 ;;; Convenience functions
 
 (defn dragging? [ owner]
@@ -63,9 +64,8 @@
   [(floor (.-width size)) (floor (.-height size))])
 
 (defn element-offset [el]
-  (let [offset (gstyle/getPageOffset el)]
+  (let [offset (gstyle/getPosition  el)]
     [(floor (.-x offset))  (floor (.-y offset))]))
-
 
 
 (defn location [e]
@@ -94,7 +94,8 @@
     (case event
       :drop  (om/update! app assoc :messages (str  id  " > " event ))
       :drag-start  (om/update! app assoc :messages (str   id " > " event))
-      :dragging nil
+      :drag-end  (om/update! app assoc :messages (str   id " > " event))
+      :dragging (om/update! app assoc :messages (str  id  " > " event ":" (:location e) ))
       )
   ))
 
@@ -105,15 +106,19 @@
         command-chan (chan)
         disperser (mult drag-evts)
         handle-command (:command-handler opts)
+        local-drag-events (chan)
         ]
     (om/set-state! owner :chans { :drag-evts  drag-evts
                                   :dims-chan  dims-chan
                                   :disperser disperser
                                   :command-chan command-chan } )
 
+
+    (tap disperser local-drag-events)
+
     (go (while true
           (alt!
-           ; drag-evts ([e c] (handle-drag-event app  e owner c ))
+            local-drag-events ([e c] (handle-drag-event e app owner  ))
            ; dims-chan ([e c] (add-child-dimensions app  e owner))
            command-chan ([e c] (handle-command e app owner))
            )))))
@@ -139,16 +144,17 @@
            type (:event evt)
            ]
       (or (= type :drag-end)
-          (and (> x t)
-               (< x b)
-               (> y l)
-               (< y r))))))
+          (and (> x l)
+               (< x r)
+               (> y t)
+               (< y b))))))
 
 (defn bounds [container]
-  (let [ [w h] (-> container gstyle/getSize  gsize->vec)
-         [x y] (element-offset container) ]
-    [[x y]  [(+ x w) (+ y h)]]
-    ))
+  (let [bounds (gstyle/getBounds container)
+        box (.. bounds toBox round)]
+
+    [ [(.-top box)    (.-left box) ]
+      [(.-bottom box) (.-right box)]] ))
 
 
 (defn directed-event-chan [owner]
@@ -252,7 +258,6 @@
           drag-offset (vec (map - el-offset drag-start))]
         ; (prn "drag end!")
       (doto owner
-        (om/set-state! :location nil)
         (om/set-state! :drag-offset nil)
         )
       (put! drag-evts

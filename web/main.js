@@ -18,8 +18,9 @@ goog.addDependency("../sablono/core.js", ['sablono.core'], ['cljs.core', 'clojur
 goog.addDependency("../clojure/set.js", ['clojure.set'], ['cljs.core']);
 goog.addDependency("../omdnd/util.js", ['omdnd.util'], ['sablono.core', 'cljs.core', 'om.core', 'clojure.string', 'clojure.set']);
 goog.addDependency("../omdnd/meter.js", ['omdnd.meter'], ['cljs.core', 'omdnd.util', 'clojure.string']);
-goog.addDependency("../omdnd/actor.js", ['omdnd.actor'], ['sablono.core', 'cljs.core', 'goog.debug', 'omdnd.meter', 'om.core', 'omdnd.util', 'clojure.string', 'om.dom', 'cljs.core.async', 'goog.style', 'omdnd.ux', 'goog.events']);
+goog.addDependency("../omdnd/actor.js", ['omdnd.actor'], ['sablono.core', 'cljs.core', 'goog.debug', 'omdnd.meter', 'om.core', 'omdnd.util', 'clojure.string', 'om.dom', 'cljs.core.async', 'omdnd.ux', 'goog.events']);
 goog.addDependency("../omdnd/initpane.js", ['omdnd.initpane'], ['sablono.core', 'cljs.core', 'om.core', 'omdnd.util', 'clojure.string', 'om.dom', 'omdnd.actor', 'cljs.core.async', 'omdnd.ux', 'goog.events']);
 goog.addDependency("../omdnd/centerpane.js", ['omdnd.centerpane'], ['cljs.core', 'om.core', 'omdnd.util', 'clojure.string', 'om.dom', 'omdnd.actor', 'cljs.core.async', 'omdnd.ux', 'goog.events']);
 goog.addDependency("../omdnd/rightpane.js", ['omdnd.rightpane'], ['sablono.core', 'cljs.core', 'om.core', 'omdnd.util', 'clojure.string', 'om.dom', 'omdnd.actor', 'cljs.core.async', 'omdnd.ux', 'goog.events']);
 goog.addDependency("../omdnd/core.js", ['omdnd.core'], ['sablono.core', 'cljs.core', 'omdnd.initpane', 'om.core', 'omdnd.rightpane', 'omdnd.util', 'clojure.string', 'om.dom', 'omdnd.actor', 'cljs.core.async', 'omdnd.centerpane', 'omdnd.ux', 'goog.events']);
+goog.addDependency("../omdnd/modal.js", ['omdnd.modal'], ['cljs.core', 'goog.debug', 'om.core', 'omdnd.util', 'om.dom', 'cljs.core.async', 'omdnd.ux', 'goog.events']);

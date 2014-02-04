@@ -9,12 +9,12 @@
 
             [omdnd.util :as util]
             [omdnd.actor :as act]
-             [omdnd.ux :as ux]
+            [omdnd.ux :as ux]
             [sablono.core :as html :refer [html] :include-macros true]
 
             )
 
-)
+  )
 
 
 (defn handle-drag [e app owner opts]
@@ -46,7 +46,7 @@
     (render  [_]
             (dom/div #js { :id "right-pane" :ref "right-pane"}
                      (om/build messages app {:opts opts})
-                     (dom/div nil (str (om/get-state owner)))
+                     ;(dom/div nil (str (om/get-state owner)))
                      )
 
             )))

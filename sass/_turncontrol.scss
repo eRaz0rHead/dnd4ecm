@@ -1,0 +1,98 @@
+﻿@import "compass/css3/user-interface";
+@import "compass/css3/transition";
+
+%turn-common {
+	margin:0px;
+	background-color: $secondary-b-5;
+	padding:15px;
+	padding-left:10px;
+	color: white;
+	@include text-shadow($primary-2  1px 1px 2px);
+	@include user-select(none);
+}
+
+.turn-control {
+	@extend %turn-common;
+	margin:0px;
+
+	@include display-box; 
+	@include box-orient(horizontal);
+	@include box-align(stretch);
+	position:relative;
+	z-index:2;
+}
+
+
+.undo {
+	@extend .icon-btn;
+	@include background-image(  	 url('../images/undo.png') ,  $btn-gradient ); 
+
+}
+.redo {
+	@extend .icon-btn;
+	@include background-image(  	 url('../images/redo.png'),  $btn-gradient ); 
+}
+
+.turn-marker {
+  @include box-flex(4);
+  line-height: 34px;
+ padding-left:1em;
+}
+.action-button {
+	@extend .std-btn;
+	height:1em;
+	margin-right: 1px;
+	@include box-flex(1);
+	//@include background-image(linear-gradient($secondary-b-4, $secondary-b-1)); 
+	@include background-image(  $btn-gradient ); 
+	border: 1px solid $secondary-b-1;
+	@include box-shadow(0 0 4px 0px $secondary-b-5 inset);
+	padding-top: 5px;
+	padding-left:15px;
+	padding-right:15px;
+	padding-bottom:12px;
+	margin-left:1px;	
+	
+	&:hover {
+		@include background-image(linear-gradient($secondary-b-5, $secondary-b-2)); 
+	}
+}
+  
+.instructions {
+	@extend %turn-common;
+	display:inline-block;
+	width:80%;
+	position:relative;
+	float:right;
+	right:5px;
+	top:-21px;
+	z-index:1;
+	border: 1px solid black;  
+	max-height:5px;
+	overflow:hidden;
+	@include box-shadow(3px 3px 8px 0px $secondary-b-1);
+	@include border-radius (10px);
+	@include transition-property(max-height);
+	@include transition-duration(1.5s); 
+	@include transition-delay(1s); 
+	&:hover {
+		max-height: 800px;
+		
+		.hover-handle {
+			opacity : 0.5;
+
+		}
+	}
+	.hover-handle {
+		text-align: center;
+		vertical-align:middle;
+		position: relative;
+		top: -4px;
+	
+		&:after {
+			content: '≡';
+			
+			//content : "…";
+		}
+	}
+}

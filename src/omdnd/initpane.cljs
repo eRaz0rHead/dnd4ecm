@@ -66,6 +66,7 @@
         [_ y]  (from-loc (:location state) loc)
         [_ ch] (:cell-dimensions state)
         drop-index (js/Math.round (/ y ch))]
+    (prn loc (:location state) y drop-index)
     (when (not= (:drop-index state) drop-index)
       (doto owner
         (om/set-state! :drop-index drop-index)
@@ -138,8 +139,9 @@
 
     om/IRenderState
     (render-state [_ state]
-            (dom/div #js {:id "init-list" :ref "init-list" }
-                     (dom/ul  nil
+            (dom/div #js {:id "init-list"  }
+                     (dom/span nil (str (:bounds state)))
+                     (dom/ul  #js { :ref "init-list"}
                               (dom/li #js { :className "round_marker"} (str "Current Round:" current-round))
                               (apply dom/ul #js {:className "sortable" :ref "sortable"}
                                      (map

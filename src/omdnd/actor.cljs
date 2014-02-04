@@ -12,7 +12,6 @@
             [omdnd.util :as util]
             [omdnd.ux :as ux]
             [omdnd.meter :as meter]
-            [goog.style :as gstyle]
             )
 
 )
@@ -76,6 +75,9 @@
     (will-update [_ next-props next-state]
       (ux/drag-listeners owner next-props next-state opts))
 
+    om/IDidUpdate
+    (did-update [_ _ prev-state _]
+               (ux/update-bounds owner prev-state opts "drag-container"))
 
     om/IRenderState
     (render-state [this state]
@@ -112,7 +114,7 @@
                [:div.vitals
                 [:span.name  name  ]
 
-                [:span " [" order "] "]
+                ; [:span  (str  (:bounds state)) ]
 
                 (if (:immediate powers) [:span.actions "immediate!" ])
                 (meter/meter hps tmp totalhps)]

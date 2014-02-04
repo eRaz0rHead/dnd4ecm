@@ -1,4 +1,5 @@
-/* @import url(http://fonts.googleapis.com/css?family=Federo|Oxygen|Belleza);
+@charset "utf-8";
+@import url(http://fonts.googleapis.com/css?family=Federo|Oxygen|Belleza);
 /*
 $primary-1:#0D58A6;
 $primary-2:#26517C;
@@ -51,7 +52,7 @@ $complement-4:#B48621;
 $complement-5:#B48E3B;
 
 */
-/* line 107, ../sass/_base.scss */
+/* line 107, ../../sass/_base.scss */
 .std-btn, .icon-btn, .undo, .redo, .action-button {
   display: inline-block;
   background-color: #eee;
@@ -63,20 +64,20 @@ $complement-5:#B48E3B;
   -o-border-radius: 5px;
   border-radius: 5px;
 }
-/* line 114, ../sass/_base.scss */
+/* line 114, ../../sass/_base.scss */
 .std-btn:hover, .icon-btn:hover, .undo:hover, .redo:hover, .action-button:hover {
   -webkit-box-shadow: 0px 0px 3px 0px #005059 inset;
   -moz-box-shadow: 0px 0px 3px 0px #005059 inset;
   box-shadow: 0px 0px 3px 0px #005059 inset;
 }
-/* line 117, ../sass/_base.scss */
+/* line 117, ../../sass/_base.scss */
 .std-btn:active, .icon-btn:active, .undo:active, .redo:active, .action-button:active {
   -webkit-box-shadow: 0px 0px 3px 1px #005059 inset;
   -moz-box-shadow: 0px 0px 3px 1px #005059 inset;
   box-shadow: 0px 0px 3px 1px #005059 inset;
 }
 
-/* line 121, ../sass/_base.scss */
+/* line 121, ../../sass/_base.scss */
 .std-btn.disabled, .disabled.icon-btn, .disabled.undo, .disabled.redo, .disabled.action-button {
   opacity: 0.2;
   -webkit-box-shadow: 0px 0px 4px 2px #005059 inset;
@@ -84,24 +85,85 @@ $complement-5:#B48E3B;
   box-shadow: 0px 0px 4px 2px #005059 inset;
 }
 
-/* line 126, ../sass/_base.scss */
+/* line 126, ../../sass/_base.scss */
 .icon-btn, .undo, .redo {
   height: 1.8em;
   width: 1.8em;
 }
 
-/* line 12, ../sass/screen.scss */
+/* line 1, ../../sass/_modal.scss */
+.modalDialog {
+  position: fixed;
+  font-family: Arial, Helvetica, sans-serif;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 99999;
+  opacity: 0;
+  -webkit-transition: opacity 400ms ease-in;
+  -moz-transition: opacity 400ms ease-in;
+  transition: opacity 400ms ease-in;
+  pointer-events: none;
+}
+
+/* line 18, ../../sass/_modal.scss */
+.modalDialog:target {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* line 23, ../../sass/_modal.scss */
+.modalDialog > div {
+  width: 400px;
+  position: relative;
+  margin: 10% auto;
+  padding: 5px 20px 13px 20px;
+  border-radius: 10px;
+  background: #fff;
+  background: -moz-linear-gradient(white, #999999);
+  background: -webkit-linear-gradient(white, #999999);
+  background: -o-linear-gradient(white, #999999);
+}
+
+/* line 36, ../../sass/_modal.scss */
+.close {
+  background: #606061;
+  color: #FFFFFF;
+  line-height: 25px;
+  position: absolute;
+  right: -12px;
+  text-align: center;
+  top: -10px;
+  width: 24px;
+  text-decoration: none;
+  font-weight: bold;
+  -webkit-border-radius: 12px;
+  -moz-border-radius: 12px;
+  border-radius: 12px;
+  -moz-box-shadow: 1px 1px 3px #000;
+  -webkit-box-shadow: 1px 1px 3px #000;
+  box-shadow: 1px 1px 3px #000;
+}
+
+/* line 55, ../../sass/_modal.scss */
+.close:hover {
+  background: #00d9ff;
+}
+
+/* line 13, ../../sass/screen.scss */
 body {
   background-color: #01112b;
   font-family: 'Oxygen',  Arial, sans-serif;
 }
 
-/* line 18, ../sass/screen.scss */
+/* line 19, ../../sass/screen.scss */
 ul {
   padding: 0;
 }
 
-/* line 21, ../sass/screen.scss */
+/* line 22, ../../sass/screen.scss */
 h1 {
   font-family: 'Federo', sans-serif;
   font-style: normal;
@@ -121,12 +183,12 @@ h1 {
   text-shadow: -1px 1px #cd8100;
 }
 
-/* line 40, ../sass/screen.scss */
+/* line 41, ../../sass/screen.scss */
 ul {
   list-style-type: none;
 }
 
-/* line 45, ../sass/screen.scss */
+/* line 46, ../../sass/screen.scss */
 #title-bar {
   width: 98%;
   -webkit-user-select: none;
@@ -134,18 +196,18 @@ ul {
   user-select: none;
 }
 
-/* line 49, ../sass/screen.scss */
+/* line 50, ../../sass/screen.scss */
 .title-pane {
   width: 700px;
   display: inline-block;
 }
 
-/* line 54, ../sass/screen.scss */
+/* line 55, ../../sass/screen.scss */
 .title {
   padding-left: 15px;
 }
 
-/* line 57, ../sass/screen.scss */
+/* line 58, ../../sass/screen.scss */
 #main {
   display: -webkit-box;
   display: -moz-box;
@@ -165,7 +227,7 @@ ul {
   min-width: 1200px;
 }
 
-/* line 70, ../sass/screen.scss */
+/* line 71, ../../sass/screen.scss */
 #init-pane {
   background-color: #d1c4af;
   -webkit-box-flex: 1;
@@ -179,7 +241,6 @@ ul {
   overflow: hidden;
   overflow-y: scroll;
   max-width: 455px;
-  min-width: 400px;
   -webkit-user-select: none;
   -moz-user-select: none;
   user-select: none;
@@ -188,7 +249,7 @@ ul {
 /*
 Initiative List Element
 */
-/* line 2, ../sass/_hpmeter.scss */
+/* line 4, ../../sass/_hpmeter.scss */
 .hp-meter {
   height: 15px;
   /* Can be anything */
@@ -205,29 +266,41 @@ Initiative List Element
   box-shadow: 0 0px 1px 1px rgba(0, 0, 0, 0.3) inset;
 }
 
-/* line 11, ../sass/_hpmeter.scss */
+/* line 13, ../../sass/_hpmeter.scss */
+.hp_meter > span.tmp {
+  display: block;
+  height: 100%;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -o-border-radius: 4px;
+  border-radius: 4px;
+  position: relative;
+}
+
+/* line 20, ../../sass/_hpmeter.scss */
 .hp-meter > span.hp {
   display: block;
-  height: 15px;
+  height: 100%;
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   -ms-border-radius: 4px;
   -o-border-radius: 4px;
   border-radius: 4px;
   background-color: #2bc253;
-  background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, #2bc253), color-stop(1, #54f054));
-  background-image: -webkit-linear-gradient(center bottom, #2bc253 37%, #54f054 69%);
-  background-image: -moz-linear-gradient(center bottom, #2bc253 37%, #54f054 69%);
-  background-image: -ms-linear-gradient(center bottom, #2bc253 37%, #54f054 69%);
-  background-image: -o-linear-gradient(center bottom, #2bc253 37%, #54f054 69%);
+  background: -webkit-gradient(linear, 50% 100%, 50% 0%, color-stop(37%, #2bc253), color-stop(69%, #54f054));
+  background: -webkit-linear-gradient(center bottom, #2bc253 37%, #54f054 69%);
+  background: -moz-linear-gradient(center bottom, #2bc253 37%, #54f054 69%);
+  background: -o-linear-gradient(center bottom, #2bc253 37%, #54f054 69%);
+  background: linear-gradient(center bottom, #2bc253 37%, #54f054 69%);
+  position: relative;
+  overflow: hidden;
   -webkit-box-shadow: inset 0 2px 9px rgba(255, 255, 255, 0.3), inset 0 -2px 6px rgba(0, 0, 0, 0.4);
   -moz-box-shadow: inset 0 2px 9px rgba(255, 255, 255, 0.3), inset 0 -2px 6px rgba(0, 0, 0, 0.4);
-  position: absolute;
-  top:2px;
-  overflow: hidden;
+  box-shadow: inset 0 2px 9px rgba(255, 255, 255, 0.3), inset 0 -2px 6px rgba(0, 0, 0, 0.4);
 }
 
-/* line 52, ../sass/_hpmeter.scss */
+/* line 35, ../../sass/_hpmeter.scss */
 .bloodied > span.hp {
   background-color: #f0a3a3;
   background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f0a3a3), color-stop(100%, #f42323));
@@ -237,61 +310,42 @@ Initiative List Element
   background-image: linear-gradient(top, #f0a3a3, #f42323);
 }
 
-
-/* line 11, ../sass/_hpmeter.scss */
-.hp-meter > span.tmp {
-  display: block;
-  height: 15px;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  -ms-border-radius: 4px;
-  -o-border-radius: 4px;
-  border-radius: 4px;
-  background-color: cyan;
-  position: absolute;
-  top:2px;
-
-
-}
-
-/* line 7, ../sass/_initlist.scss */
-#init-list {
+/* line 7, ../../sass/_initlist.scss */
+.init-list {
   margin: 0;
   padding: 1px;
 }
 
-/* line 12, ../sass/_initlist.scss */
+/* line 12, ../../sass/_initlist.scss */
 .readying {
   background: grey;
   color: darkgrey !important;
 }
 
-/* line 16, ../sass/_initlist.scss */
+/* line 16, ../../sass/_initlist.scss */
 .actor {
-  background-color:#d1c4af;
+  background-color: #d1c4af;
   padding: 6px;
   padding-left: 0px;
   margin: 2px;
   border: 1px solid black;
   max-height: 60px;
-     -webkit-border-radius: 6px;
-    -moz-border-radius: 6px;
-    -ms-border-radius: 6px;
-    -o-border-radius: 6px;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  -ms-border-radius: 6px;
+  -o-border-radius: 6px;
   border-radius: 6px;
-
   box-shadow: 1px 1px 1px #888888;
-
 }
 
-/* line 22, ../sass/_initlist.scss */
+/* line 32, ../../sass/_initlist.scss */
 .vitals {
-  width: 170px;
+  width: 227.5px;
   display: inline-block;
   vertical-align: top;
-  margin-right:10px;
+  margin-right: 10px;
 }
-/* line 29, ../sass/_initlist.scss */
+/* line 41, ../../sass/_initlist.scss */
 .vitals .actions {
   position: relative;
   float: right;
@@ -302,21 +356,150 @@ Initiative List Element
   color: red;
 }
 
-/* line 39, ../sass/_initlist.scss */
+/* line 51, ../../sass/_initlist.scss */
 .effects {
   font-size: 12px;
   display: inline-block;
   padding-left: 4px;
 }
-.effects ul {
-  overflow-y:auto;
-  overflow-x:none;
-  max-height:50px;
-  width:110px;
 
+/* line 56, ../../sass/_initlist.scss */
+.effects ul {
+  overflow-y: auto;
+  overflow-x: none;
+  max-height: 50px;
+  width: 110px;
 }
 
-/* line 78, ../sass/screen.scss */
+/* line 63, ../../sass/_initlist.scss */
+.round_marker {
+  color: #e9e9e9;
+  background-color: #38929a;
+  text-align: center;
+  box-shadow: 0 0 4px #01112b inset;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* line 1, ../../sass/_reservelist.scss */
+#reserve-list {
+  background: grey;
+  color: grey;
+}
+
+/* line 7, ../../sass/_reservelist.scss */
+#reserve-list li {
+  height: 1.2em;
+  overflow: hidden;
+  transition: height 300ms;
+  -webkit-transition: height 300ms;
+  /* Safari */
+}
+/* line 13, ../../sass/_reservelist.scss */
+#reserve-list li :hover {
+  height: 60px;
+}
+
+/* line 19, ../../sass/_reservelist.scss */
+#reserve-list.drag-hover {
+  border: 1px solid blue;
+}
+
+/* line 23, ../../sass/_reservelist.scss */
+#reserve-list .actor {
+  background: lightgrey;
+}
+
+/* line 27, ../../sass/_reservelist.scss */
+#reserve-list [contenteditable=true] {
+  display: none;
+}
+
+@font-face {
+  font-family: 'u2800';
+  src: url("http://unicode-table.com/fonts/u/u2800-webfont.eot");
+  src: url("http://unicode-table.com/fonts/u/u2800-webfont.eot?#iefix") format("embedded-opentype"), url("http://unicode-table.com/fonts/u/u2800-webfont.woff") format("woff"), url("http://unicode-table.com/fonts/u/u2800-webfont.ttf") format("truetype"), url("http://unicode-table.com/fonts/u/u2800-webfont.svg#universaliaregular") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* line 9, ../../sass/_drag.scss */
+[contenteditable=true] {
+  color: blue;
+  padding: 2px;
+}
+
+/* line 15, ../../sass/_drag.scss */
+span[contenteditable=true]:hover,
+span[contenteditable=true]:focus {
+  color: red;
+  box-shadow: -1px 1px 3px #223344;
+}
+
+/* line 20, ../../sass/_drag.scss */
+ul {
+  list-style-type: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  min-height: 50px;
+}
+
+/* line 33, ../../sass/_drag.scss */
+li > span.init-name {
+  display: inline-block;
+  max-width: 180px;
+}
+
+/* line 38, ../../sass/_drag.scss */
+.draggable span.drag-handle {
+  visibility: hidden;
+  height: 60px;
+  float: left;
+  display: inline-block;
+  padding-right: 4px;
+  font-size: 30px;
+  font-family: u2800;
+}
+
+/* line 49, ../../sass/_drag.scss */
+li.draggable:hover span.drag-handle {
+  visibility: visible;
+}
+
+/* line 53, ../../sass/_drag.scss */
+span.drag-handle:hover {
+  cursor: -webkit-grab;
+  cursor: -moz-grab;
+}
+
+/* line 58, ../../sass/_drag.scss */
+.cursor_moving {
+  cursor: move;
+}
+
+/* line 62, ../../sass/_drag.scss */
+.el_moving {
+  opacity: 0.6;
+  z-index: 300;
+}
+
+/* line 67, ../../sass/_drag.scss */
+.el_moving span.drag-handle {
+  visibility: visible;
+}
+
+/* line 72, ../../sass/_drag.scss */
+.init-num {
+  float: right;
+  display: inline-block;
+}
+
+/* line 82, ../../sass/screen.scss */
 #center-pane {
   background-color: #d1c4af;
   -webkit-box-flex: 1;
@@ -332,10 +515,9 @@ Initiative List Element
   -moz-box-flex: 1;
   -ms-box-flex: 1;
   box-flex: 1;
-  max-width:50%;
 }
 
-/* line 4, ../sass/_turncontrol.scss */
+/* line 4, ../../sass/_turncontrol.scss */
 .turn-control, .instructions {
   margin: 0px;
   background-color: #38929a;
@@ -348,7 +530,7 @@ Initiative List Element
   user-select: none;
 }
 
-/* line 14, ../sass/_turncontrol.scss */
+/* line 14, ../../sass/_turncontrol.scss */
 .turn-control {
   margin: 0px;
   display: -webkit-box;
@@ -367,7 +549,7 @@ Initiative List Element
   z-index: 2;
 }
 
-/* line 26, ../sass/_turncontrol.scss */
+/* line 26, ../../sass/_turncontrol.scss */
 .undo {
   background-image: url("../images/undo.png"), -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #4dc8d3), color-stop(100%, #005059));
   background-image: url("../images/undo.png"), -webkit-linear-gradient(#4dc8d3, #005059);
@@ -376,7 +558,7 @@ Initiative List Element
   background-image: url("../images/undo.png"), linear-gradient(#4dc8d3, #005059);
 }
 
-/* line 31, ../sass/_turncontrol.scss */
+/* line 31, ../../sass/_turncontrol.scss */
 .redo {
   background-image: url("../images/redo.png"), -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #4dc8d3), color-stop(100%, #005059));
   background-image: url("../images/redo.png"), -webkit-linear-gradient(#4dc8d3, #005059);
@@ -385,7 +567,7 @@ Initiative List Element
   background-image: url("../images/redo.png"), linear-gradient(#4dc8d3, #005059);
 }
 
-/* line 36, ../sass/_turncontrol.scss */
+/* line 36, ../../sass/_turncontrol.scss */
 .turn-marker {
   -webkit-box-flex: 4;
   -moz-box-flex: 4;
@@ -395,7 +577,7 @@ Initiative List Element
   padding-left: 1em;
 }
 
-/* line 41, ../sass/_turncontrol.scss */
+/* line 41, ../../sass/_turncontrol.scss */
 .action-button {
   height: 1em;
   margin-right: 1px;
@@ -418,7 +600,7 @@ Initiative List Element
   padding-bottom: 12px;
   margin-left: 1px;
 }
-/* line 56, ../sass/_turncontrol.scss */
+/* line 56, ../../sass/_turncontrol.scss */
 .action-button:hover {
   background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #38929a), color-stop(100%, #0e4146));
   background-image: -webkit-linear-gradient(#38929a, #0e4146);
@@ -427,7 +609,7 @@ Initiative List Element
   background-image: linear-gradient(#38929a, #0e4146);
 }
 
-/* line 61, ../sass/_turncontrol.scss */
+/* line 61, ../../sass/_turncontrol.scss */
 .instructions {
   display: inline-block;
   width: 80%;
@@ -460,32 +642,32 @@ Initiative List Element
   -o-transition-delay: 1s;
   transition-delay: 1s;
 }
-/* line 78, ../sass/_turncontrol.scss */
+/* line 78, ../../sass/_turncontrol.scss */
 .instructions:hover {
   max-height: 800px;
 }
-/* line 81, ../sass/_turncontrol.scss */
+/* line 81, ../../sass/_turncontrol.scss */
 .instructions:hover .hover-handle {
   opacity: 0.5;
 }
-/* line 86, ../sass/_turncontrol.scss */
+/* line 86, ../../sass/_turncontrol.scss */
 .instructions .hover-handle {
   text-align: center;
   vertical-align: middle;
   position: relative;
   top: -4px;
 }
-/* line 92, ../sass/_turncontrol.scss */
+/* line 92, ../../sass/_turncontrol.scss */
 .instructions .hover-handle:after {
   content: '≡';
 }
 
-/* line 84, ../sass/screen.scss */
+/* line 88, ../../sass/screen.scss */
 #selected-actor {
   border-top: 3px solid #01112b;
 }
 
-/* line 87, ../sass/screen.scss */
+/* line 91, ../../sass/screen.scss */
 #right-pane {
   background-color: #d1c4af;
   -webkit-box-flex: 1;
@@ -497,24 +679,8 @@ Initiative List Element
   border: 1px solid #01112b;
   margin-left: 1px;
   overflow: hidden;
-  -webkit-box-flex: 2;
-  -moz-box-flex: 2;
-  -ms-box-flex: 2;
-  box-flex: 2;
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  -ms-box-flex: 1;
+  box-flex: 1;
 }
-
-
-.round_marker {
-  color: rgb(233, 233, 233);
-  background-color: #38929a;
-  text-align:center;
-  box-shadow: 0 0 4px #01112b inset;
-  width:90%;
-  margin-left:auto;
-  margin-right:auto;
-}
-
-
-
-
-
