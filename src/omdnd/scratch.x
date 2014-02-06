@@ -1,3 +1,15 @@
+
+    (let [pageX (.-pageX e)
+          pageY (.-pageY e)]
+    (if (undefined? pageX)
+        [(+ (.-clientX e) (.. document -body -scrollLeft) (.. document -documentElement -scrollLeft))
+         (+ (.-clientY e) (.. document -body -scrollTop) (.. document -documentElement -scrollTop))
+        ]
+        [pageX pageY]
+        )))
+
+
+
 function getOffsetRect(elem) {
     // (1)
     var box = elem.getBoundingClientRect()

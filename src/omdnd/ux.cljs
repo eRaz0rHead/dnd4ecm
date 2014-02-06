@@ -18,6 +18,7 @@
            [cljs.core.async :refer [put! <! chan close! tap untap mult filter>]]
            [om.core :as om]
            [goog.events :as events]
+           [goog.dom :as gdom]
            [goog.style :as gstyle])
   (:import
            [goog.events EventType])
@@ -63,13 +64,27 @@
 (defn gsize->vec [size]
   [(floor (.-width size)) (floor (.-height size))])
 
-(defn element-offset [el]
-  (let [offset (gstyle/getPosition  el)]
+(defn page-offset [el]
+  (let [offset (gstyle/getPageOffset el)]
+    [(floor (.-x offset))  (floor (.-y offset))]))
+
+(defn position [el]
+  (let [offset (gstyle/getPosition el)]
     [(floor (.-x offset))  (floor (.-y offset))]))
 
 
-(defn location [e]
-  [(floor (.-clientX e)) (floor (.-clientY e))])
+(defn page-location [e]
+  (let [pageX (.-pageX e)
+        pageY (.-pageY e)]
+    (if (undefined? pageX)
+      [(+ (.-clientX e) (.. js/document -body -scrollLeft) )
+       (+ (.-clientY e) (.. js/document -body -scrollTop) )
+       ]
+      [pageX pageY]
+      )))
+
+(defn c-location [e]
+  [(.-clientX e) (.-clientY e)])
 
 
 ;;;;;
@@ -144,10 +159,10 @@
            type (:event evt)
            ]
       (or (= type :drag-end)
-          (and (> x l)
-               (< x r)
-               (> y t)
-               (< y b))))))
+          (and (>= x l)
+               (<= x r)
+               (>= y t)
+               (<= y b))))))
 
 (defn bounds [container]
   (let [bounds (gstyle/getBounds container)
@@ -195,7 +210,7 @@
 
       (om/set-state! owner :dimensions dims)
       (om/set-state! owner :location
-          (element-offset container))
+          (page-offset container))
 
       (om/set-state! owner :bounds  new-bounds)
       (when event-handler
@@ -225,25 +240,52 @@
 
 ; Drag handlers
 
+;;; TODO : use goog.style.getOffsetParent
 
 (defn drag-start [e actor owner opts]
   (when-not (dragging? owner)
     (let [el (om/get-node owner "drag-container")
-          drag-start (location e)
-          el-offset (element-offset el)
-          drag-offset (vec (map - el-offset drag-start))
+          drag-start (c-location e)
+          el-offset (page-offset el)
+          drag-offset (vec (map - drag-start el-offset))
           drag-evts (drag-evts opts) ]
       ;; if in a sortable need to wait for sortable to
       ;; initiate dragging
       (doto owner
-        (om/set-state! :location el-offset)
+        (om/set-state! :location drag-offset)
         (om/set-state! :dragging (:id actor))
         (om/set-state! :drag-offset drag-offset))
 
+
+      (prn "drag start @" drag-start ", element " el " drag-offset " drag-offset)
         (put!  drag-evts
           {:event :drag-start
            :drag-item actor
+           :location drag-start}))))
+
+
+(defn drag-start [e actor owner opts]
+  (when-not (dragging? owner)
+    (let [el          (om/get-node owner "drag-container")
+          state       (om/get-state owner)
+          drag-start  (c-location e)
+          el-offset   (page-offset el)
+          drag-offset (vec (map - el-offset drag-start))
+          drag-evts   (drag-evts opts)]
+      ;; if in a sortable need to wait for sortable to
+      ;; initiate dragging
+
+      (doto owner
+        (om/set-state! :location el-offset)
+        (om/set-state! :dragging (:id actor))
+        (om/set-state! :drag-offset drag-offset))
+       (put!  drag-evts
+          {:event :drag-start
+           :drag-item actor
            :location (vec (map + drag-start drag-offset))}))))
+
+
+
 
 
 
@@ -253,17 +295,18 @@
       (om/set-state! owner :dragging false))
     (let [drag-evts (drag-evts opts)
           el (om/get-node owner "drag-container")
-          drag-start (location e)
-          el-offset (element-offset el)
+          drag-start (c-location e)
+          el-offset (page-offset el)
           drag-offset (vec (map - el-offset drag-start))]
         ; (prn "drag end!")
       (doto owner
         (om/set-state! :drag-offset nil)
+         (om/set-state! :location nil)
         )
       (put! drag-evts
             {:event :drop
              :drag-item actor
-             :location (vec (map + drag-start drag-offset))})
+             :location drag-start})
       (put! drag-evts
             {:event :drag-end })
       ))
@@ -274,14 +317,32 @@
   (when (dragging? owner)
       (let [state (om/get-state owner)
             drag-evts (drag-evts opts)
-            loc   (vec (map + (location e) (:drag-offset state)))]
+            el (om/get-node owner "drag-container")
+            drag-start (c-location e)
+            el-offset (page-offset el)
+            ]
         (.preventDefault e)
-        (om/set-state! owner :location loc)
-
+        (doto owner
+          (om/set-state! :location drag-start)
+        )
+        (prn "dragging " drag-start)
         (put! drag-evts
               {:event :dragging
                :drag-item actor
-               :location  loc}))))
+               :location  drag-start}))))
+
+
+
+(defn drag [e actor owner opts]
+  (let [state (om/get-state owner)]
+    (when (dragging? owner)
+      (let [ drag-evts (drag-evts opts)
+             loc   (vec (map + (c-location e) (:drag-offset state)))]
+        (om/set-state! owner :location loc)
+        (put! drag-evts
+              {:event :dragging
+               :drag-item actor
+               :location  loc})))))
 
 
 

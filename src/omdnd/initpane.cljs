@@ -140,7 +140,7 @@
     om/IRenderState
     (render-state [_ state]
             (dom/div #js {:id "init-list"  }
-                     (dom/span nil (str (:bounds state)))
+                     ; (dom/span nil (str (:bounds state)))
                      (dom/ul  #js { :ref "init-list"}
                               (dom/li #js { :className "round_marker"} (str "Current Round:" current-round))
                               (apply dom/ul #js {:className "sortable" :ref "sortable"}

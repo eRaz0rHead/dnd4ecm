@@ -219,7 +219,7 @@ ul {
   box-orient: horizontal;
   box-sizing: border-box;
   color: #021b44;
-  position: relative;
+  /* position: relative; */
   top: 1px;
   left: 1px;
   min-height: 400px;

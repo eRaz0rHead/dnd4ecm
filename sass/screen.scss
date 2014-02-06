@@ -61,7 +61,7 @@ ul {
 	//@include box-align(stretch);
 	box-sizing:border-box;
 	color:$primary-3;
-	position:relative;
+	// position:relative; // fix when dragging works with it.
 	top:1px;
 	left:1px;
 	min-height:400px;
