@@ -7,7 +7,7 @@
             [clojure.string :as string]
             [om.core :as om :include-macros true]
             [om.dom :as dom :include-macros true]
-            [sablono.core :as html :refer [html] :include-macros true]
+            [sablono.core :as html :refer-macros [html] ]
 
             [omdnd.util :as util]
             [omdnd.ux :as ux]
@@ -18,12 +18,19 @@
 
 
 (enable-console-print!)
-(defn log [& x]
-  (.log js/console (prn-str x)))
+
 
 (def ENTER_KEY 13)
 (def ESCAPE_KEY 27)
 
+
+(defn set-selected [e id selected actor  owner opts]
+  (prn "selecting  " id selected "<< "(:id actor) (:selected actor) )
+  ;(om/update! actor assoc :selected (not (:selected @actor)))
+  (when-let [command-chan (ux/command-chan opts)]
+    (put! command-chan {:event :select :actors [id] :selected selected}))
+
+  )
 
 (defn handle-focus [e  ]
   (let [rng (.createRange js/document)
@@ -37,7 +44,7 @@
   (om/set-state! owner [:init] (- (.. e -target -textContent) 0))
   (when-let [edit-text (om/get-state owner [:init])]
     (when-let [command-chan (ux/command-chan opts)]
-      (put! command-chan {:event :to-init :actors  [(assoc @actor :init edit-text)]})))
+      (put! command-chan {:event :to-init :actors  [(assoc actor :init edit-text)]})))
   false)
 
 (defn handle-key-down [e actor owner opts]
@@ -45,7 +52,7 @@
     (cond
      (identical? kc ESCAPE_KEY)
        (do
-         (om/set-state! owner [:init] (:init @actor))
+         (om/set-state! owner [:init] (:init actor))
            ; (.. e -target -setTextContent (:init @actor) )
          ;   (put! (:comm opts) [:cancel actor])
          ; (.. e -target -setTextContent (:init @actor) )
@@ -63,7 +70,8 @@
   ))
 
 
-(defn actor-init-item [{:keys [id name init initBonus initRoll hps totalhps tmp effects powers new_round order] :as actor} owner opts]
+(defn actor-init-item [{:keys [id selected] :as actor} owner opts]
+
   (reify
 
     om/IDidMount
@@ -93,15 +101,16 @@
                     :else
                     #js {:position "static" })]
 
-          (if-not (nil? new_round)
-            (dom/li #js {:key id :id "next_round_marker" :className "round_marker"} new_round)
+          (if-not (nil? (:new_round actor))
+            (dom/li #js {:key (:id actor) :id "next_round_marker" :className "round_marker"} (:new_round actor))
             (html
              [:li.actor.draggable
               {
-               :className (when (ux/dragging? owner) "el_moving")
-               :key id
+               :class [(when (ux/dragging? owner) "el_moving")  (when (:selected actor) "selected")]
+               :key (:id actor)
                :style style
                :ref "drag-container"
+
                }
                [:span.drag-handle
                 {
@@ -111,21 +120,27 @@
                  :onMouseMove #(ux/drag % @actor owner opts)
                                    }
                 "⣿" ]
-               [:div.vitals
-                [:span.name  name  ]
+              [:div
+               {:onClick #(set-selected % id (not selected) @actor owner opts)
+                }
+
+
+              [:div.vitals
+                [:span.name (:name actor)  ]
 
                 ; [:span  (str  (:bounds state)) ]
 
-                (if (:immediate powers) [:span.actions "immediate!" ])
-                (meter/meter hps tmp totalhps)]
+                (if (:immediate (:powers actor)) [:span.actions "immediate!" ])
+                (meter/meter (:hps actor) (:tmp actor) (:totalhps actor))]
                 [:div.effects
                  [:ul
-                  (for [effect effects]  [:li effect]) ]]
+                  (for [effect (:effects actor)]  [:li effect]) ]]
                [:span.init-num {:contentEditable true
                                 ; :onFocus  (fn [e] (handle-focus e   ))
-                                :onKeyDown #(handle-key-down % actor owner opts)
-                                :onBlur #(handle-submit % actor owner opts)
-                                 } init]
+                                :onKeyDown #(handle-key-down % @actor owner opts)
+                                :onBlur #(handle-submit % @actor owner opts)
+                                 } (:init actor)]
+              ]
               ]
              )
           )

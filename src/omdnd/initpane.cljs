@@ -10,7 +10,7 @@
             [omdnd.util :as util]
             [omdnd.actor :as act]
             [omdnd.ux :as ux]
-            [sablono.core :as html :refer [html] :include-macros true]
+
 
             )
 
@@ -144,12 +144,13 @@
                      (dom/ul  #js { :ref "init-list"}
                               (dom/li #js { :className "round_marker"} (str "Current Round:" current-round))
                               (apply dom/ul #js {:className "sortable" :ref "sortable"}
-                                     (map
-                                      (fn [actor]
-                                        (if-not (= actor ::spacer)
+                                     (flatten (map-indexed
+                                      (fn [idx actor]
+                                         [(when (= idx (:drop-index state))
+                                            (sortable-spacer (second (:cell-dimensions state))))
                                           (om/build act/actor-init-item actor {:opts opts :key :id} )
-                                          (sortable-spacer (second (:cell-dimensions state)))))
-                                      (sorting-state (util/init-list actors current-init current-order current-round) owner))))))
+                                          ])
+                                        (util/init-list actors current-init current-order current-round) ))))))
 
     ))
 

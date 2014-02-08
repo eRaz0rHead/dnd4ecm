@@ -53,6 +53,9 @@
 (defn dragging? [ owner]
       (om/get-state owner :dragging))
 
+(defn selected? [ actor]
+      (:selected actor))
+
 (defn mouse-down? [owner]
       (om/get-state owner :mouse-down))
 

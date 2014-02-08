@@ -7,11 +7,16 @@ Initiative List Element
 .init-list {
 	margin:0;
 	padding:1px;
-	
+
+}
+.actor.selected {
+  border: 2px solid blue;
+  background-color:lightblue;
+
 }
 .readying {
-	background: grey;
-	color:darkgrey !important;
+	background: darkgrey;
+	color:grey !important;
 }
 .actor {
   background-color:#d1c4af;
@@ -51,7 +56,7 @@ Initiative List Element
 .effects {
 	font-size:12px;
 	display:inline-block;
-	padding-left:4px;	
+	padding-left:4px;
 }
 .effects ul {
 	overflow-y:auto;
@@ -68,6 +73,4 @@ Initiative List Element
 	width:90%;
 	margin-left:auto;
 	margin-right:auto;
-
-
 }

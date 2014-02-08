@@ -13,8 +13,6 @@
             [omdnd.initpane :as initpane]
             [omdnd.centerpane :as centerpane]
             [omdnd.rightpane :as rightpane]
-            [sablono.core :as html :refer [html] :include-macros true]
-
 
             )
   ;(:import [goog History]
@@ -92,7 +90,7 @@
     (replace-actors-state actors app)
     (set-actors-value ids app :reserved nil)
     (normalize-order app)
-    (om/update! app assoc :current-order (max (map :order  (filter #(= (:current-init @app) (:init %)) actors ))))
+    ;(om/update! app assoc :current-order (max (map :order  (filter #(= (:current-init @app-state) (:init %)) actors ))))
     ))
 
 (defn handle-command [{:keys [event actors] :as e} app  owner]
@@ -101,6 +99,7 @@
       :next-turn (handle-next-turn  app)
       :reserve  (set-reserved (set (map #(:id %) actors)) app)
       :to-init  (add-to-init actors app)
+      :select  (set-actors-value actors app :selected (:selected e))
       )
   )
 

@@ -10,7 +10,6 @@
             [omdnd.util :as util]
             [omdnd.actor :as act]
             [omdnd.ux :as ux]
-            [sablono.core :as html :refer [html] :include-macros true]
 
             )
 

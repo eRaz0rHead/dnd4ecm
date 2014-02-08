@@ -1,4 +1,4 @@
-@charset "utf-8";
+@charset "UTF-8";
 @import url(http://fonts.googleapis.com/css?family=Federo|Oxygen|Belleza);
 /*
 $primary-1:#0D58A6;
@@ -219,7 +219,6 @@ ul {
   box-orient: horizontal;
   box-sizing: border-box;
   color: #021b44;
-  /* position: relative; */
   top: 1px;
   left: 1px;
   min-height: 400px;
@@ -317,12 +316,18 @@ Initiative List Element
 }
 
 /* line 12, ../../sass/_initlist.scss */
-.readying {
-  background: grey;
-  color: darkgrey !important;
+.actor.selected {
+  border: 2px solid blue;
+  background-color: lightblue;
 }
 
-/* line 16, ../../sass/_initlist.scss */
+/* line 17, ../../sass/_initlist.scss */
+.readying {
+  background: darkgrey;
+  color: grey !important;
+}
+
+/* line 21, ../../sass/_initlist.scss */
 .actor {
   background-color: #d1c4af;
   padding: 6px;
@@ -338,14 +343,14 @@ Initiative List Element
   box-shadow: 1px 1px 1px #888888;
 }
 
-/* line 32, ../../sass/_initlist.scss */
+/* line 37, ../../sass/_initlist.scss */
 .vitals {
   width: 227.5px;
   display: inline-block;
   vertical-align: top;
   margin-right: 10px;
 }
-/* line 41, ../../sass/_initlist.scss */
+/* line 46, ../../sass/_initlist.scss */
 .vitals .actions {
   position: relative;
   float: right;
@@ -356,14 +361,14 @@ Initiative List Element
   color: red;
 }
 
-/* line 51, ../../sass/_initlist.scss */
+/* line 56, ../../sass/_initlist.scss */
 .effects {
   font-size: 12px;
   display: inline-block;
   padding-left: 4px;
 }
 
-/* line 56, ../../sass/_initlist.scss */
+/* line 61, ../../sass/_initlist.scss */
 .effects ul {
   overflow-y: auto;
   overflow-x: none;
@@ -371,7 +376,7 @@ Initiative List Element
   width: 110px;
 }
 
-/* line 63, ../../sass/_initlist.scss */
+/* line 68, ../../sass/_initlist.scss */
 .round_marker {
   color: #e9e9e9;
   background-color: #38929a;
@@ -434,7 +439,7 @@ Initiative List Element
 span[contenteditable=true]:hover,
 span[contenteditable=true]:focus {
   color: red;
-  box-shadow: -1px 1px 3px #223344;
+  box-shadow: -1px 1px 3px #234;
 }
 
 /* line 20, ../../sass/_drag.scss */

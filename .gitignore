@@ -12,6 +12,7 @@ out/
 
 // generated 
 web/main.js
+/.sass-cache/
 // Include when developing application packages
 pubspec.lock 
 

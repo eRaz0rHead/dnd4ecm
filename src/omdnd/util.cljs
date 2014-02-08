@@ -1,7 +1,6 @@
 (ns omdnd.util
   (:require
    [clojure.string :as string]
-   [sablono.core :as html :refer [html] :include-macros true]
    [clojure.set :as s]
    [om.core :as om :include-macros true]
    )
@@ -145,3 +144,36 @@
             (if (== i idx)
               (into (conj ret x) v)
               (recur (inc i) (next v) (conj ret y)))))))))
+
+
+
+
+;;;;;;;;;;;;;;;;
+; Algorithm for Init used by DarkSir's Combat Manager
+
+
+(defn die [num rng]
+  (repeatedly num #(+ 1 (rand-int rng))))
+
+
+(defn roll [x]
+  (first (die 1 x) ))
+
+;nInitRoll = die.Roll(20) + stats.nInit,
+(defn initRoll [nInit]
+  (+ (roll 20) nInit ))
+
+
+(defn newInitMod [nInit]
+  (+ (+ (roll 500) 200)
+     (* (- 90 nInit) 1000)))
+
+(defn initSeq [nRound nInitRoll newInitMod]
+  (+ (* nRound 10000000)
+     (* (- 95 nInitRoll) 100000)
+     newInitMod )
+
+
+; (initSeq 1 (initRoll 20) (newInitMod 20))
+
+
