@@ -2,7 +2,7 @@
 	  (require [dndscraper.xml :as xml]
              [dndscraper.util :as util]
              [dndscraper.db :as db]
-             [dndscraper.login :as login]
+            ; [dndscraper.login :as login]
              [clojure.zip :as zip]
              [clojure.data.zip.xml :as cdzx]
             ))
@@ -12,12 +12,12 @@
 
 	(use 'clj-webdriver.taxi)
 
-  ;
-  ; (defn login []
-  ;	  (println "logging in")
-  ;	  (quick-fill-submit {"input#email", "email@email.com",
-  ;	                      "input#password", "******",
-  ; 	                      "#InsiderSignin", click }))
+
+  (defn login []
+  	  (println "logging in")
+  	  (quick-fill-submit {"input#email", "email@email.com",
+  	                      "input#password", "******",
+   	                      "#InsiderSignin", click }))
 
 
 	(defn start-session
@@ -26,7 +26,7 @@
 	 (set-driver! d)
    (to  (str base-compendium "monster.aspx?id=1"))
 		(if (exists? "input#email")
-		 (login/login)
+		 ( login)
 		 (println "already logged in"))))
 
 

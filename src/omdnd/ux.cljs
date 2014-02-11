@@ -289,9 +289,6 @@
 
 
 
-
-
-
 (defn drag-end [e actor owner opts]
   (when (dragging? owner)
     (when (om/get-state owner :dragging)

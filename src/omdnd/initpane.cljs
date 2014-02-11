@@ -1,6 +1,6 @@
 (ns omdnd.initpane
   (:require-macros [cljs.core.async.macros :refer [go alt!]]
-           )
+                   )
   (:require [goog.events :as gevents]
             [cljs.core.async :refer [put! <! chan dropping-buffer]]
             [om.core :as om :include-macros true]
@@ -14,7 +14,7 @@
 
             )
 
-)
+  )
 
 (enable-console-print!)
 
@@ -37,7 +37,7 @@
 
     om/IDidUpdate
     (did-update [_ _ prev-state _]
-               (ux/update-bounds owner prev-state opts "reserve-list"))
+                (ux/update-bounds owner prev-state opts "reserve-list"))
 
     om/IWillUnmount
     (will-unmount [_]
@@ -48,12 +48,12 @@
                   (dom/div #js {:id  "reserve-list" :ref "reserve-list"
                                 :className (when (:drag-hover state) "drag-hover")
                                 }
-                           (dom/ul  nil ; #js {:id  "reserve-list" :ref   "reserve-list"}
-                                    (om/build-all act/actor-init-item (util/reserved actors)
-                                                  {:opts opts :key :id}
-                                                  ))
+                           (apply dom/ul  nil
+                                  (om/build-all act/actor-init-item (util/reserved actors)
+                                                {:opts opts :key :id}
+                                                ))))
 
-                           ))))
+    ))
 
 
 (defn from-loc [v1 v2]
@@ -66,7 +66,7 @@
         [_ y]  (from-loc (:location state) loc)
         [_ ch] (:cell-dimensions state)
         drop-index (js/Math.round (/ y ch))]
-    (prn loc (:location state) y drop-index)
+    ; (prn loc (:location state) y drop-index)
     (when (not= (:drop-index state) drop-index)
       (doto owner
         (om/set-state! :drop-index drop-index)
@@ -129,9 +129,9 @@
     (did-mount [t node]
                (ux/register-dimensions owner opts "init-list" #(handle-init-drag % app owner opts)))
 
-     om/IDidUpdate
+    om/IDidUpdate
     (did-update [_ _ prev-state _]
-               (ux/update-bounds owner prev-state opts "init-list"))
+                (ux/update-bounds owner prev-state opts "init-list"))
 
     om/IWillUnmount
     (will-unmount [_]
@@ -139,18 +139,18 @@
 
     om/IRenderState
     (render-state [_ state]
-            (dom/div #js {:id "init-list"  }
-                     ; (dom/span nil (str (:bounds state)))
-                     (dom/ul  #js { :ref "init-list"}
-                              (dom/li #js { :className "round_marker"} (str "Current Round:" current-round))
-                              (apply dom/ul #js {:className "sortable" :ref "sortable"}
-                                     (flatten (map-indexed
-                                      (fn [idx actor]
-                                         [(when (= idx (:drop-index state))
-                                            (sortable-spacer (second (:cell-dimensions state))))
-                                          (om/build act/actor-init-item actor {:opts opts :key :id} )
-                                          ])
-                                        (util/init-list actors current-init current-order current-round) ))))))
+                  (dom/div #js {:id "init-list"  }
+                           ; (dom/span nil (str (:bounds state)))
+                           (dom/ul  #js { :ref "init-list"}
+                                    (dom/li #js { :className "round_marker"} (str "Current Round:" current-round))
+                                    (apply dom/ul #js {:className "sortable" :ref "sortable"}
+                                           (flatten (map-indexed
+                                                     (fn [idx actor]
+                                                       [(when (= idx (:drop-index state))
+                                                          (sortable-spacer (second (:cell-dimensions state))))
+                                                        (om/build act/actor-init-item actor {:opts opts :key :id} )
+                                                        ])
+                                                     (util/init-list actors current-init current-order current-round) ))))))
 
     ))
 

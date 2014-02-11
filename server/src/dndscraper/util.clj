@@ -1,16 +1,23 @@
 (ns dndscraper.util
   (:import (java.nio.file Path PathMatcher FileSystems)))
-  
+
 (def fs (FileSystems/getDefault ))
 
 (defn parse-int [s]
   (Integer. (re-find  #"\d+" s )))
 
 ; U+00A0
- (defn compress-whitespace [s] 
+(defn compress-whitespace [s]
   (clojure.string/replace  s #"[\p{Z}\s]+"  " " ))
- 
- 
+
+
+(defn content [x]
+  (clojure.string/trim  (first (:content x))) )
+
+(defn safekw [s]
+  (keyword (clojure.string/replace (clojure.string/trim s) " " "_")))
+
+
 (def match-xml
   (.getPathMatcher fs "glob:**.xml"))
 
@@ -31,12 +38,12 @@
 
 (defn fetch-data [url out-file]
   (let  [con    (-> url java.net.URL. .openConnection)
-         fields (reduce (fn [h v] 
+         fields (reduce (fn [h v]
                           (assoc h (.getKey v) (into [] (.getValue v))))
                         {} (.getHeaderFields con))
          size   (first (fields "Content-Length"))
          in     (java.io.BufferedInputStream. (.getInputStream con))
-         out    (java.io.BufferedOutputStream. 
+         out    (java.io.BufferedOutputStream.
                  (java.io.FileOutputStream. out-file))
          buffer (make-array Byte/TYPE 1024)]
     (prn fields)

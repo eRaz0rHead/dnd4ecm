@@ -171,7 +171,7 @@
 (defn initSeq [nRound nInitRoll newInitMod]
   (+ (* nRound 10000000)
      (* (- 95 nInitRoll) 100000)
-     newInitMod )
+     newInitMod ))
 
 
 ; (initSeq 1 (initRoll 20) (newInitMod 20))

@@ -9,7 +9,7 @@
 
 (defn de-amp [url]
   (clojure.string/replace url "&amp;" "&"))
-  
+
 (def fix-url
  "fix the url to be certain it links correctly."
   #(let [name (:name (:attrs % ))
@@ -22,7 +22,7 @@
   [nodes]
   (apply str (e/emit* nodes)))
 
-(defn fixed-items [char-name] 
+(defn fixed-items [char-name]
    (e/at (pc-file char-name) [:loot :RulesElement]   fix-url ))
 
 (defn fix-n-save [char-name]
@@ -30,47 +30,48 @@
          (render (fixed-items char-name))))
 
 
-(defn attr [node name] 
+(defn attr [node name]
     (get (:attrs node) name))
 
 
-
+(defn content[x]
+  (clojure.string/trim  (first (:content x))) )
 
 ;(def mba (first ( powerlist "Arranais"  )))
 
 (defn safekw [s]
-  (keyword (clojure.string/replace s " " "_")))
+  (keyword (clojure.string/replace (clojure.string/trim s) " " "_")))
 
 (defn stat-atts [char]
   (for [x  (e/select (pc-file char) [:Stat]) ]
     {
      :name  (map (fn [x] (attr x :name))  (e/select x [:alias]) )
-     :value (e/attr-values x :value)
+     :value (clojure.string/trim (e/attr-values x :value))
      }
     ))
 
 (defn weapon-atts [one-weapon]
   (let [m { :Weapon (attr one-weapon :name) }]
-    (merge m 
-           (apply merge 
+    (merge m
+           (apply merge
                   (for [x  (e/select  one-weapon [ :Weapon e/any ]) ]
-                    { (:tag x) (first (:content x)) }
+                    (when (:content x)  { (:tag x) (content x) } )
                     )))))
 
 (defn power-atts [node]
   (let [m { :Power (attr node :name) }]
-    (merge m 
-           (apply merge 
+    (merge m
+           (apply merge
                   (for [x  (e/select  node [:specific]) ]
-                    { (safekw (attr x :name))  (first (:content x)) }
+                    (when (:content x ) { (safekw (attr x :name)) (content x) })
                   ))
            { :Weapons (map weapon-atts (e/select node [:Weapon])) }
            )))
 
 (defn stats [char]
-  (apply merge  
-     (flatten 
-       (map 
+  (apply merge
+     (flatten
+       (map
          (fn [m]
            (let [alias-list (:name m)]
              (for [nm alias-list]
@@ -83,12 +84,15 @@
 
 
 (for [power (powers "Arranais")]
-  (prn "Power : " (:Power power)  
+  (prn "Power : " (:Power power)
      (for [w  (:Weapons  power) ]
          (str (:Weapon w) ":  +"  (:AttackBonus w) " vs. "  (:Defense w)
-              "Damage :"  (:Damage w)
+              " Damage :"  (:Damage w)
               "\n")
          )
-      "Hit:" (:Hit power)      
-      "Effect:" (:Effect power)))
+      (when (:Hit power )  (str "Hit:" (:Hit power)))
+      (when (:Effect power ) (str "Effect:" (:Effect power)))))
+
+
+(powers "Arranais")
 
