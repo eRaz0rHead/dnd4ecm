@@ -3,6 +3,7 @@ pom.xml
 /lib/
 /classes/
 /target/
+/resources/
 .lein-deps-sum
 // Don’t commit the following files and directories created by pub and dart2js
 out/
