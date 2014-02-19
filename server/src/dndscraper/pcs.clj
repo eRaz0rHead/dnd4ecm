@@ -1,6 +1,6 @@
 (ns dndscraper.pcs
  (:require [net.cgrand.enlive-html :as e]
-           [dndscraper.util :only local-file]
+           [dndscraper.util :as u]
            [dndscraper.core :as core]))
 
 (defn pc-file [char]
@@ -34,13 +34,13 @@
     (get (:attrs node) name))
 
 
+
+;; TODO -- use enlive here instead.
 (defn content[x]
   (clojure.string/trim  (first (:content x))) )
 
 ;(def mba (first ( powerlist "Arranais"  )))
 
-(defn safekw [s]
-  (keyword (clojure.string/replace (clojure.string/trim s) " " "_")))
 
 (defn stat-atts [char]
   (for [x  (e/select (pc-file char) [:Stat]) ]
@@ -63,7 +63,7 @@
     (merge m
            (apply merge
                   (for [x  (e/select  node [:specific]) ]
-                    (when (:content x ) { (safekw (attr x :name)) (content x) })
+                    (when (:content x ) { (u/safekw (attr x :name)) (content x) })
                   ))
            { :Weapons (map weapon-atts (e/select node [:Weapon])) }
            )))
@@ -75,7 +75,7 @@
          (fn [m]
            (let [alias-list (:name m)]
              (for [nm alias-list]
-	              { (safekw nm) (first (:value m))})))  (stat-atts char)))))
+	              { (u/safekw nm) (first (:value m))})))  (stat-atts char)))))
 
 
 (defn powers [char]

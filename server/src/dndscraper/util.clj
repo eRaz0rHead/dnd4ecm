@@ -11,9 +11,6 @@
   (clojure.string/replace  s #"[\p{Z}\s]+"  " " ))
 
 
-(defn content [x]
-  (clojure.string/trim  (first (:content x))) )
-
 (defn safekw [s]
   (keyword (clojure.string/replace (clojure.string/trim s) " " "_")))
 
