@@ -11,7 +11,7 @@
 (defn- merge-fn [a b]
   (if (vector? a)
     (conj a b)
-    (vector a b)
+    [a b]
     ))
 
 
