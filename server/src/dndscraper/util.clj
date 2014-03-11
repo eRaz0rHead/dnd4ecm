@@ -4,7 +4,11 @@
 (def fs (FileSystems/getDefault ))
 
 (defn parse-int [s]
-  (Integer. (re-find  #"\d+" s )))
+  (cond
+   (nil? s) nil
+   (number? s) s
+   :default
+   (Integer. (re-find  #"\d+" s ))))
 
 ; U+00A0
 (defn compress-whitespace [s]

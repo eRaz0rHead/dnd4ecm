@@ -1,0 +1,118 @@
+(show-ns)
+(ns)
+(use [dndscraper.xml])
+exit
+(use [dndscraper.xml])
+exit
+(defrecord Empty [])
+(sort (map :name (filter #(and (instance? clojure.reflect.Method %) (empty? (.parameter-types %))) ((rf/reflect Empty) :members))))
+(sort (map :name (filter #(and (instance? clojure.reflect.Method %) (empty? (.parameter-types %))) ((reflect Empty) :members))))
+(use [clojure.reflect])
+(use 'clojure.reflect)
+(sort (map :name (filter #(and (instance? clojure.reflect.Method %) (empty? (.parameter-types %))) ((reflect Empty) :members))))
+clear
+ls
+((reflect Empty) :members)
+(defrecord Combatant
+  [id
+   name
+   ^Stats stats
+   defenses
+   max-hps
+   current-hps
+   temp-hps
+   init-bonus
+   init-roll
+   init
+   powers
+   effects
+   ; other ; to hold information otherwise lost during round-tripping
+  ]
+)
+(defrecord AbilityScores [strength dexterity constitution intelligence wisdom charisma]
+  )
+(defrecord Stats [^AbilityScores abilities level role speed regen resist vuln immune ])
+(defrecord Combatant
+  [id
+   name
+   ^Stats stats
+   defenses
+   max-hps
+   current-hps
+   temp-hps
+   init-bonus
+   init-roll
+   init
+   powers
+   effects
+   ; other ; to hold information otherwise lost during round-tripping
+  ]
+)
+(sort (map :name (filter #(and (instance? clojure.reflect.Method %) (empty? (.parameter-types %))) ((reflect Combatant) :members))))
+(sort (map :name (filter #(and (instance? clojure.reflect.Method %) (empty? (.parameter-types %))) ((reflect Combatant) :members))))(sort (map :name (filter #(instance? clojure.reflect.Field %) ((reflect Combatant) :members))))
+(sort (map :name (filter #(instance? clojure.reflect.Field %) ((reflect Combatant) :members))))
+(filter #(instance? clojure.reflect.Field %) ((reflect Combatant) :members)))
+(filter #(instance? clojure.reflect.Field %) ((reflect Combatant) :members))
+(sort (map :type (filter #(instance? clojure.reflect.Field %) ((reflect Combatant) :members))))
+(set (map :type (filter #(instance? clojure.reflect.Field %) ((reflect Combatant) :members))))
+(sort (map :type (filter #(instance? clojure.reflect.Field %) ((reflect Combatant) :members))))
+(clojure.pprint/pprint
+ (sort (map :type (filter #(instance? clojure.reflect.Field %) ((reflect Combatant) :members))))
+ )
+(clojure.pprint/pprint
+ (sort (map (comp :name :type) (filter #(instance? clojure.reflect.Field %) ((reflect Combatant) :members))))
+ )
+(clojure.pprint/pprint
+ (sort (map :name (filter #(instance? clojure.reflect.Field %) ((reflect Combatant) :members))))
+ )
+(clojure.pprint/pprint
+ (:stats  (filter #(instance? clojure.reflect.Field %) ((reflect Combatant) :members))))
+(clojure.pprint/pprint
+   (filter #(instance? clojure.reflect.Field %) ((reflect Combatant) :members)))
+(clojure.pprint/pprint
+   ((reflect Combatant) :members)
+ 
+ )
+(clojure.pprint/pprint
+   ((reflect Combatant) :members)
+ 
+ )
+(.iterator Combatant)
+(Combatant/create. )
+(Combatant/create )
+(.Combatant/create )
+(.create Combatant)
+(def Griff  (map->Combatant {:name "Griff" :id 2
+                    :stats (map->Stats {:abilities  (->AbilityScores 30 12 30 12 13 14)})
+                                  :max-hps 100}))
+Griff
+(.keySet Griff)
+(.const__30 Griff)
+(.const__30 Combatant)
+(.const__1 Combatant)
+(get const__1 Combatant)
+(get :const__1 Combatant)
+(get :const__1 Combatant.)
+(Combatant/getBasis)
+(defn die [num rng]
+  (repeatedly num #(+ 1 (rand-int rng))))
+(defn roll [x]
+  (first (die 1 x) ))
+;nInitRoll = die.Roll(20) + stats.nInit,
+(defn initRoll [nInit]
+  (+ (roll 20) nInit ))
+(defn newInitMod [nInit]
+  (+ (+ (roll 500) 200)
+     (* (- 90 nInit) 1000)))
+(defn initSeq [nRound nInitRoll newInitMod]
+  (+ (* nRound 10000000)
+     (* (- 95 nInitRoll) 100000)
+     newInitMod ))
+ (initSeq 1 (initRoll 20) (newInitMod 20))
+ (initSeq 2 (initRoll 20) (newInitMod 20))
+exit
+(use 'ring.adapter.jetty)
+(use 'dnd.server.core)
+(run-jetty handler {:port 3000
+})
+exit

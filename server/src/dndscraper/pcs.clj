@@ -43,30 +43,35 @@
 
 
 (defn stat-atts [char]
-  (for [x  (e/select (pc-file char) [:Stat]) ]
-    {
-     :name  (map (fn [x] (attr x :name))  (e/select x [:alias]) )
-     :value (clojure.string/trim (e/attr-values x :value))
-     }
-    ))
+  (map (fn [x]
+         { :name  (map  #(attr % :name) (e/select x [:alias]) )
+           :value (u/parse-int (clojure.string/trim (e/attr-values x :value))) } )
+       (e/select (pc-file char) [:Stat])))
 
-(defn weapon-atts [one-weapon]
-  (let [m { :Weapon (attr one-weapon :name) }]
+
+
+(stat-atts "Arranais")
+
+(defn weapon-atts [a-weapon]
+  (let [m { :Weapon (attr a-weapon :name) }]
     (merge m
-           (apply merge
-                  (for [x  (e/select  one-weapon [ :Weapon e/any ]) ]
-                    (when (:content x)  { (:tag x) (content x) } )
-                    )))))
+           (into {} (map
+                     #(when (:content %)  { (:tag %) (content %) } )
+                     (e/select  a-weapon [ :Weapon e/any ]))
+                 ))))
+
 
 (defn power-atts [node]
   (let [m { :Power (attr node :name) }]
     (merge m
-           (apply merge
-                  (for [x  (e/select  node [:specific]) ]
-                    (when (:content x ) { (u/safekw (attr x :name)) (content x) })
-                  ))
+           (into {} (map
+                     #(when (:content % ) { (u/safekw (attr % :name)) (content %) })
+                     (e/select  node [:specific])))
            { :Weapons (map weapon-atts (e/select node [:Weapon])) }
            )))
+
+(power-atts (first (e/select (pc-file "Arranais")  [:Power])))
+
 
 (defn stats [char]
   (apply merge
@@ -75,12 +80,11 @@
          (fn [m]
            (let [alias-list (:name m)]
              (for [nm alias-list]
-	              { (u/safekw nm) (first (:value m))})))  (stat-atts char)))))
+	              { (u/safekw nm)  (:value m)})))  (stat-atts char)))))
 
 
 (defn powers [char]
-  (for [p (e/select (pc-file char)  [:Power])]
-     (power-atts p)))
+  (map power-atts (e/select (pc-file char)  [:Power])))
 
 
 (for [power (powers "Arranais")]
@@ -94,5 +98,9 @@
       (when (:Effect power ) (str "Effect:" (:Effect power)))))
 
 
-(powers "Arranais")
+;(powers "Arranais")
+
+(clojure.pprint/pprint
+ (sort (stats "Arranais"))
+)
 

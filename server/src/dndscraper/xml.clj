@@ -8,6 +8,7 @@
 
 
 
+
 (defn- merge-fn [a b]
   (if (vector? a)
     (conj a b)
@@ -45,6 +46,8 @@
    ))
 
 
+
+;; TODO - move Data-Specific fns (e.g. count-by-type etc) to correct namespace
 
 (defn zip-resource [type]
   (zip/xml-zip (xml/parse (str "resources/" type ".xml"))))

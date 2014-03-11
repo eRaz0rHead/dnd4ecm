@@ -15,6 +15,9 @@
                  [om "0.3.6"]
                  [sablono "0.2.6"]
                  [com.facebook/react "0.8.0.1"]
+
+                 [ring/ring-core "1.2.1"]
+                 [ring/ring-jetty-adapter "1.2.1"]
                  ]
 
   :plugins [[lein-cljsbuild "1.0.1"]]
