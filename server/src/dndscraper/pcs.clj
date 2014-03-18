@@ -10,6 +10,7 @@
 (defn de-amp [url]
   (clojure.string/replace url "&amp;" "&"))
 
+
 (def fix-url
  "fix the url to be certain it links correctly."
   #(let [name (:name (:attrs % ))
@@ -23,7 +24,7 @@
   (apply str (e/emit* nodes)))
 
 (defn fixed-items [char-name]
-   (e/at (pc-file char-name) [:loot :RulesElement]   fix-url ))
+   (e/at (pc-file char-name) [:loot [:RulesElement (e/attr? :url)]]  fix-url ))
 
 (defn fix-n-save [char-name]
   (spit  (str "resources/fixed-chars/" char-name ".dnd4e")
@@ -70,7 +71,7 @@
            { :Weapons (map weapon-atts (e/select node [:Weapon])) }
            )))
 
-(power-atts (first (e/select (pc-file "Arranais")  [:Power])))
+; (power-atts (first (e/select (pc-file "Arranais")  [:Power])))
 
 
 (defn stats [char]
@@ -86,21 +87,22 @@
 (defn powers [char]
   (map power-atts (e/select (pc-file char)  [:Power])))
 
-
-(for [power (powers "Arranais")]
-  (prn "Power : " (:Power power)
-     (for [w  (:Weapons  power) ]
-         (str (:Weapon w) ":  +"  (:AttackBonus w) " vs. "  (:Defense w)
-              " Damage :"  (:Damage w)
-              "\n")
-         )
-      (when (:Hit power )  (str "Hit:" (:Hit power)))
-      (when (:Effect power ) (str "Effect:" (:Effect power)))))
+(defn print-powers [character]
+  (for [power (powers character)]
+    (apply str (flatten (apply conj [] ["Power : " (:Power power) " "]
+                               (for [w  (:Weapons  power) ]
+                                 ["{"(:Weapon w) ": +"  (:AttackBonus w) " vs. "  (:Defense w)
+                                  ", Damage :"  (:Damage w)
+                                  "}\n"]
+                                 )
+                               [(when (:Hit power )  (str "\nHit:" (:Hit power)))]
+                               [(when (:Effect power ) (str "\nEffect:" (:Effect power)))]
+                               ["\n"]
+                               )))))
 
 
 ;(powers "Arranais")
 
 (clojure.pprint/pprint
- (sort (stats "Arranais"))
-)
+ (print-powers "GaranKel"))
 

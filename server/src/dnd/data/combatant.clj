@@ -41,7 +41,7 @@
   (map keyword (.. m (getMethod "getBasis" nil) (invoke nil nil))))
 
 
-(defn sel-record [m rec]
+(defn select-for-record [m rec]
   (select-keys m (basis rec))
   )
 
@@ -53,7 +53,7 @@
          (remove nil? ((apply juxt ks) m))
      ))))
 
-(defn h-abilities [a]
+(defn abilities-by-alias [a]
   {:strength  (collapse a [:strength :str :STR  :Strength])
    :dexterity  (collapse a [:dexterity :dex :DEX :Dexterity])
    :constitution (collapse a [:constitution :con :CON :Constitution])
@@ -65,20 +65,20 @@
 (defn to-abilities [a]
   (cond
    (sequential? a) (apply ->AbilityScores a)
-   (map? a)        (map->AbilityScores (h-abilities a))
+   (map? a)        (map->AbilityScores (abilities-by-alias a))
    ))
 
 (defn combatant [m]
   (let [s         (:stats m)
         a         (:abilities s )
         abilities (to-abilities a)
-        stats     (merge s (sel-record m Stats) {:abilities abilities})
+        stats     (merge s (select-for-record m Stats) {:abilities abilities})
         powers    (:power m)
         remaining (apply dissoc m (flatten [(basis AbilityScores)(basis Combatant)(basis Stats) :power]))
         ]
     (map->Combatant
      (merge remaining
-            (sel-record m Combatant)
+            (select-for-record m Combatant)
             {:stats stats :powers powers}
             ))))
 

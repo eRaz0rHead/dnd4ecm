@@ -17,3 +17,9 @@ web/main.js
 // Include when developing application packages
 pubspec.lock 
 
+
+server/src/dndscraper/login.clj
+
+.lein-repl-history
+
+chromedriver

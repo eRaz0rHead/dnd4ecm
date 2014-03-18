@@ -18,6 +18,8 @@
 
                  [ring/ring-core "1.2.1"]
                  [ring/ring-jetty-adapter "1.2.1"]
+
+                 [com.h2database/h2 "1.3.175"]
                  ]
 
   :plugins [[lein-cljsbuild "1.0.1"]]

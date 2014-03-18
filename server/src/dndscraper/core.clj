@@ -1,6 +1,7 @@
 	(ns dndscraper.core
 	  (require [dndscraper.xml :as xml]
              [dndscraper.util :as util]
+             [dndscraper.login :as login]
              [dndscraper.db :as db]
             ; [dndscraper.login :as login]
              [clojure.zip :as zip]
@@ -26,7 +27,7 @@
 	 (set-driver! d)
    (to  (str base-compendium "monster.aspx?id=1"))
 		(if (exists? "input#email")
-		 ( login)
+		 (login/login)
 		 (println "already logged in"))))
 
 
@@ -109,5 +110,14 @@
          builder-link))))
 
 
+ (defn fix-link-no-db  [item-name builder-link]
+   (if-let [id (xml/id-for-name (sanitize-item item-name) "item") ]
+     (let [linked-page (str (page-source (to builder-link)))
+           found (> (.indexOf linked-page item-name) 0)
+           fixed-link  (str base-compendium  "item.aspx?id=" id)]
+       (if found builder-link fixed-link))
+     builder-link))
 
 
+
+; (start-session)
