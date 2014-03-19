@@ -9,7 +9,8 @@
 
             [omdnd.actor :as act]
             [omdnd.util :as util]
-            [omdnd.ux :as ux]
+            [omdnd.initiative :as init]
+            [om-component.ux :as ux]
             [omdnd.initpane :as initpane]
             [omdnd.centerpane :as centerpane]
             [omdnd.rightpane :as rightpane]
@@ -23,21 +24,25 @@
 
 (def ENTER_KEY 13)
 
-(def app-state (atom {:actors  (util/establish-order (util/generate-rnd-monsters 7))
+(def app-state (atom {:actors  (init/establish-order (util/generate-rnd-monsters 7))
                       :current-init 10000
                       :current-round 1
                       }
                      ))
 
 
-(defn set-actors-value [ids app k v]
+(defn set-actors-value [ids app kvs]
   (om/transact! app  :actors
                 (fn [actors]
-                  (into [] (map #(if (some #{(:id %)} ids )
-                                   (if-not (nil?  v)
-                                     (assoc % k v)
-                                     (dissoc % k))
-                                   %) actors)))))
+                  (into [] (map
+                            #(if (some #{(:id %)} ids)
+                               (into {}
+                                     (remove (fn [[k v]] (nil? v))
+                                             (apply assoc % kvs)))
+
+                               %)
+                            actors)))))
+
 
 (defn by-id [id actors]
   (filter #(= (:id %) id) actors))
@@ -65,13 +70,13 @@
  (defn normalize-order [ app]
   (om/transact! app  :actors
                 (fn [actors]
-                  (into []  (util/establish-order actors)
+                  (into []  (init/establish-order actors)
                         ))))
 
 
 (defn handle-next-turn [app ]
-  (let [next-actor  (second  (util/init-list (:actors @app ) (:current-init @app) (:current-order @app)))
-        is_new_round  (= (first (util/sort-actors (util/active (:actors @app ))))   next-actor)]
+  (let [next-actor  (second  (init/init-list (:actors @app ) (:current-init @app) (:current-order @app)))
+        is_new_round  (= (first (init/sort-actors (init/active (:actors @app ))))   next-actor)]
 
    (om/update! app assoc :current-init  (:init next-actor ))
    (om/update! app assoc :current-order (:order next-actor ))
@@ -82,13 +87,13 @@
 (defn set-reserved [ids app]
   (prn ids)
   (om/update! app assoc :messages (str  " reserved > " ids ))
-  (set-actors-value ids app :reserved "true"))
+  (set-actors-value ids app [:reserved "true" :selected nil]))
 
 (defn add-to-init [actors app]
   (om/update! app assoc :messages (str  " TO COMBAT > " (set (map :id actors))  (first (map :init actors))))
   (let [ids (set (map :id actors))]
     (replace-actors-state actors app)
-    (set-actors-value ids app :reserved nil)
+    (set-actors-value ids app [:reserved nil])
     (normalize-order app)
     ;(om/update! app assoc :current-order (max (map :order  (filter #(= (:current-init @app-state) (:init %)) actors ))))
     ))
@@ -99,7 +104,7 @@
       :next-turn (handle-next-turn  app)
       :reserve  (set-reserved (set (map #(:id %) actors)) app)
       :to-init  (add-to-init actors app)
-      :select  (set-actors-value actors app :selected (:selected e))
+      :select  (set-actors-value actors app [:selected (:selected e)])
       )
   )
 

@@ -1,6 +1,7 @@
 @charset "UTF-8";
 @import url(http://fonts.googleapis.com/css?family=Federo|Oxygen|Belleza);
 /*
+
 $primary-1:#0D58A6;
 $primary-2:#26517C;
 $primary-3:#04376C;
@@ -27,6 +28,7 @@ $complement-5:#FFC773;
 
 */
 /*
+
 $primary-1:#0A1D5C ;
 $primary-2 : #19213F ;
 $primary-3:#020E33;
@@ -51,8 +53,17 @@ $complement-3:#4C3400;
 $complement-4:#B48621;
 $complement-5:#B48E3B;
 
+/* */
+/*
+$btn-bg-top: adjust-color($complement-5,  $lightness:10%, $saturation:-5%);
+$btn-bg-bottom: adjust-color($complement-1, $lightness:5%, $saturation:30%);
 */
-/* line 107, ../../sass/_base.scss */
+/*
+$btn-bg-top: adjust-color($secondary-b-5,  $lightness:50%, $saturation:-5%);
+$btn-bg-bottom: adjust-color($secondary-b-5, $lightness:-25%, $saturation:30%);
+/* */
+/* */
+/* line 113, ../../sass/_base.scss */
 .std-btn, .icon-btn, .undo, .redo, .action-button {
   display: inline-block;
   background-color: #eee;
@@ -64,20 +75,20 @@ $complement-5:#B48E3B;
   -o-border-radius: 5px;
   border-radius: 5px;
 }
-/* line 114, ../../sass/_base.scss */
+/* line 120, ../../sass/_base.scss */
 .std-btn:hover, .icon-btn:hover, .undo:hover, .redo:hover, .action-button:hover {
   -webkit-box-shadow: 0px 0px 3px 0px #005059 inset;
   -moz-box-shadow: 0px 0px 3px 0px #005059 inset;
   box-shadow: 0px 0px 3px 0px #005059 inset;
 }
-/* line 117, ../../sass/_base.scss */
+/* line 123, ../../sass/_base.scss */
 .std-btn:active, .icon-btn:active, .undo:active, .redo:active, .action-button:active {
   -webkit-box-shadow: 0px 0px 3px 1px #005059 inset;
   -moz-box-shadow: 0px 0px 3px 1px #005059 inset;
   box-shadow: 0px 0px 3px 1px #005059 inset;
 }
 
-/* line 121, ../../sass/_base.scss */
+/* line 127, ../../sass/_base.scss */
 .std-btn.disabled, .disabled.icon-btn, .disabled.undo, .disabled.redo, .disabled.action-button {
   opacity: 0.2;
   -webkit-box-shadow: 0px 0px 4px 2px #005059 inset;
@@ -85,7 +96,7 @@ $complement-5:#B48E3B;
   box-shadow: 0px 0px 4px 2px #005059 inset;
 }
 
-/* line 126, ../../sass/_base.scss */
+/* line 132, ../../sass/_base.scss */
 .icon-btn, .undo, .redo {
   height: 1.8em;
   width: 1.8em;
@@ -198,7 +209,7 @@ ul {
 
 /* line 50, ../../sass/screen.scss */
 .title-pane {
-  width: 700px;
+  width: 500px;
   display: inline-block;
 }
 
@@ -224,11 +235,14 @@ ul {
   min-height: 400px;
   max-height: 800px;
   min-width: 1200px;
+  width: 100%;
 }
 
-/* line 71, ../../sass/screen.scss */
+/* line 72, ../../sass/screen.scss */
 #init-pane {
   background-color: #d1c4af;
+  min-width: 250px;
+  max-width: 33%;
   -webkit-box-flex: 1;
   -moz-box-flex: 1;
   -ms-box-flex: 1;
@@ -239,7 +253,7 @@ ul {
   margin-left: 1px;
   overflow: hidden;
   overflow-y: scroll;
-  max-width: 455px;
+  max-width: 325px;
   -webkit-user-select: none;
   -moz-user-select: none;
   user-select: none;
@@ -315,19 +329,25 @@ Initiative List Element
   padding: 1px;
 }
 
-/* line 12, ../../sass/_initlist.scss */
+/* line 13, ../../sass/_initlist.scss */
+.init-num {
+  float: right;
+  display: inline-block;
+}
+
+/* line 18, ../../sass/_initlist.scss */
 .actor.selected {
   border: 2px solid blue;
   background-color: lightblue;
 }
 
-/* line 17, ../../sass/_initlist.scss */
+/* line 23, ../../sass/_initlist.scss */
 .readying {
   background: darkgrey;
   color: grey !important;
 }
 
-/* line 21, ../../sass/_initlist.scss */
+/* line 27, ../../sass/_initlist.scss */
 .actor {
   background-color: #d1c4af;
   padding: 6px;
@@ -343,14 +363,14 @@ Initiative List Element
   box-shadow: 1px 1px 1px #888888;
 }
 
-/* line 37, ../../sass/_initlist.scss */
+/* line 43, ../../sass/_initlist.scss */
 .vitals {
-  width: 227.5px;
+  width: 162.5px;
   display: inline-block;
   vertical-align: top;
   margin-right: 10px;
 }
-/* line 46, ../../sass/_initlist.scss */
+/* line 52, ../../sass/_initlist.scss */
 .vitals .actions {
   position: relative;
   float: right;
@@ -361,22 +381,22 @@ Initiative List Element
   color: red;
 }
 
-/* line 56, ../../sass/_initlist.scss */
+/* line 62, ../../sass/_initlist.scss */
 .effects {
   font-size: 12px;
   display: inline-block;
   padding-left: 4px;
 }
 
-/* line 61, ../../sass/_initlist.scss */
+/* line 67, ../../sass/_initlist.scss */
 .effects ul {
   overflow-y: auto;
   overflow-x: none;
   max-height: 50px;
-  width: 110px;
+  width: 62.5px;
 }
 
-/* line 68, ../../sass/_initlist.scss */
+/* line 74, ../../sass/_initlist.scss */
 .round_marker {
   color: #e9e9e9;
   background-color: #38929a;
@@ -463,7 +483,6 @@ li > span.init-name {
 /* line 38, ../../sass/_drag.scss */
 .draggable span.drag-handle {
   visibility: hidden;
-  height: 60px;
   float: left;
   display: inline-block;
   padding-right: 4px;
@@ -498,15 +517,11 @@ span.drag-handle:hover {
   visibility: visible;
 }
 
-/* line 72, ../../sass/_drag.scss */
-.init-num {
-  float: right;
-  display: inline-block;
-}
-
-/* line 82, ../../sass/screen.scss */
+/* line 83, ../../sass/screen.scss */
 #center-pane {
   background-color: #d1c4af;
+  min-width: 250px;
+  max-width: 33%;
   -webkit-box-flex: 1;
   -moz-box-flex: 1;
   -ms-box-flex: 1;
@@ -516,10 +531,7 @@ span.drag-handle:hover {
   border: 1px solid #01112b;
   margin-left: 1px;
   overflow: hidden;
-  -webkit-box-flex: 1;
-  -moz-box-flex: 1;
-  -ms-box-flex: 1;
-  box-flex: 1;
+  max-width: 325px;
 }
 
 /* line 4, ../../sass/_turncontrol.scss */
@@ -667,14 +679,16 @@ span.drag-handle:hover {
   content: '≡';
 }
 
-/* line 88, ../../sass/screen.scss */
+/* line 90, ../../sass/screen.scss */
 #selected-actor {
   border-top: 3px solid #01112b;
 }
 
-/* line 91, ../../sass/screen.scss */
+/* line 93, ../../sass/screen.scss */
 #right-pane {
   background-color: #d1c4af;
+  min-width: 250px;
+  max-width: 33%;
   -webkit-box-flex: 1;
   -moz-box-flex: 1;
   -ms-box-flex: 1;
@@ -684,8 +698,4 @@ span.drag-handle:hover {
   border: 1px solid #01112b;
   margin-left: 1px;
   overflow: hidden;
-  -webkit-box-flex: 1;
-  -moz-box-flex: 1;
-  -ms-box-flex: 1;
-  box-flex: 1;
 }

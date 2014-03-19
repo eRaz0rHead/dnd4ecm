@@ -8,8 +8,10 @@
             [clojure.string :as string]
 
             [omdnd.util :as util]
+            [omdnd.initiative :as init]
+
             [omdnd.actor :as act]
-            [omdnd.ux :as ux]
+            [om-component.ux :as ux]
 
 
             )
@@ -49,7 +51,7 @@
                                 :className (when (:drag-hover state) "drag-hover")
                                 }
                            (apply dom/ul  nil
-                                  (om/build-all act/actor-init-item (util/reserved actors)
+                                  (om/build-all act/actor-init-item (init/reserved actors)
                                                 {:opts opts :key :id}
                                                 ))))
 
@@ -89,7 +91,7 @@
   (when-let [command-chan (ux/command-chan opts)]
     (let [state (om/get-state owner)
           next-idx (:drop-index state)
-          initiative (util/init-list actors current-init current-order)
+          initiative (init/init-list actors current-init current-order)
           next-item (nth initiative  next-idx nil)
           prev-idx (min (dec next-idx) (dec (count initiative)))
           prev-item (nth initiative prev-idx nil)
@@ -150,7 +152,7 @@
                                                           (sortable-spacer (second (:cell-dimensions state))))
                                                         (om/build act/actor-init-item actor {:opts opts :key :id} )
                                                         ])
-                                                     (util/init-list actors current-init current-order current-round) ))))))
+                                                     (init/init-list actors current-init current-order current-round) ))))))
 
     ))
 

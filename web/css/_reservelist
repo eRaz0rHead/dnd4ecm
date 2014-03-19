@@ -1,0 +1,21 @@
+#reserve-list {
+  background: grey;
+  color: grey; }
+
+#reserve-list li {
+  height: 1.2em;
+  overflow: hidden;
+  transition: height 300ms;
+  -webkit-transition: height 300ms;
+  /* Safari */ }
+  #reserve-list li :hover {
+    height: 60px; }
+
+#reserve-list.drag-hover {
+  border: 1px solid blue; }
+
+#reserve-list .actor {
+  background: lightgrey; }
+
+#reserve-list [contenteditable=true] {
+  display: none; }

@@ -10,7 +10,7 @@
 ;;   drag-evts might be in shared or stay in opts
 ;;   disperser -- shared.
 
-(ns omdnd.ux
+(ns om-component.ux
   (:require-macros
            [cljs.core.async.macros :refer [go alt!]]
    )

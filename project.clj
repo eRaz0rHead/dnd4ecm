@@ -22,7 +22,9 @@
                  [com.h2database/h2 "1.3.175"]
                  ]
 
-  :plugins [[lein-cljsbuild "1.0.1"]]
+  :plugins [[lein-cljsbuild "1.0.1"]
+
+            ]
 
   :source-paths ["src" "server/src"]
 
@@ -35,6 +37,7 @@
                 :source-map "web/main.js.map"
                 :optimizations :none
              }}]}
+
   )
 
 

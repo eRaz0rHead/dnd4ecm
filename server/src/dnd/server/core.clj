@@ -11,6 +11,13 @@
 )
 
 
+(defn generate-response [data & [status]]
+  {:status (or status 200)
+   :headers {"Content-Type" "application/edn"}
+   :body (pr-str data)})
+
+
+
 (defn index []
   (file-response "index.html" {:root "web"}))
 
@@ -20,3 +27,20 @@
   {:status 200
    :headers {"Content-Type" "text/html"}
    :body "Hello World"})
+
+
+(defroutes routes
+  (GET "/" [] (index))
+  ;(GET "/classes" [] (classes))
+  ;(PUT "/class/:id/update"
+  ;  {params :params edn-params :edn-params}
+  ;  (update-class (:id params) edn-params))
+  (route/files "/" {:root "resources/public"}))
+
+(def app
+  (-> routes
+      wrap-edn-params))
+
+(defonce server
+  (run-jetty #'app {:port 8080 :join? false}))
+

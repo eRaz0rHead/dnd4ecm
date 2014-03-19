@@ -9,6 +9,12 @@ Initiative List Element
 	padding:1px;
 
 }
+
+.init-num {
+  float:right;
+  display:inline-block;
+}
+
 .actor.selected {
   border: 2px solid blue;
   background-color:lightblue;
@@ -62,7 +68,7 @@ Initiative List Element
 	overflow-y:auto;
 	overflow-x:none;
 	max-height:50px;
-	width:110px;
+	width: ($pane-width *0.25);
 }
 
 .round_marker {

@@ -7,13 +7,13 @@
 
 
 [contenteditable=true] {
-  color:blue;
+  color:$color_editable;
   padding:2px;
 
 }
 span[contenteditable=true]:hover,
 span[contenteditable=true]:focus  {
-  color:red;
+  color:$color_edit_focus;
   box-shadow: -1px 1px 3px #234;
 }
 
@@ -37,7 +37,7 @@ li > span.init-name {
 
 .draggable span.drag-handle {
   visibility: hidden;
-  height: 60px;
+  // height: 60px;
   float: left;
   display: inline-block;
   padding-right: 4px;
@@ -69,7 +69,4 @@ span.drag-handle:hover {
 }
 
 
-.init-num {
-  float:right;
-  display:inline-block;
-}
+

@@ -9,7 +9,7 @@
 
             [omdnd.util :as util]
             [omdnd.actor :as act]
-            [omdnd.ux :as ux]
+            [om-component.ux :as ux]
 
             )
 

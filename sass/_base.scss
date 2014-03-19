@@ -1,6 +1,6 @@
 
-
 /*
+
 $primary-1:#0D58A6;
 $primary-2:#26517C;
 $primary-3:#04376C;
@@ -26,7 +26,6 @@ $complement-4:#FFB240;
 $complement-5:#FFC773;
 
 */
-
 
 $primary-1 : #04275E;
 $primary-2 : #12284C;
@@ -54,6 +53,7 @@ $complement-5 : #BC9044;
 
 
 /*
+
 $primary-1:#0A1D5C ;
 $primary-2 : #19213F ;
 $primary-3:#020E33;
@@ -78,7 +78,7 @@ $complement-3:#4C3400;
 $complement-4:#B48621;
 $complement-5:#B48E3B;
 
-*/
+/* */
 
 $base-bg : darken($primary-3, 5%);
 $title-color: lighten($complement-3, 20%);
@@ -86,16 +86,22 @@ $shadow-color: $secondary-b-3;
 $pane-bg: adjust-color( $complement-5, $lightness:25%, $saturation:-20%);
 
 
-//$btn-bg-top: adjust-color($complement-5,  $lightness:10%, $saturation:-5%);
-//$btn-bg-bottom: adjust-color($complement-1, $lightness:5%, $saturation:30%);
+$color_editable: blue;
+$color_edit_focus: red;
 
-// $btn-bg-top: adjust-color($secondary-b-5,  $lightness:50%, $saturation:-5%);
-// $btn-bg-bottom: adjust-color($secondary-b-5, $lightness:-25%, $saturation:30%);
 
+/*
+$btn-bg-top: adjust-color($complement-5,  $lightness:10%, $saturation:-5%);
+$btn-bg-bottom: adjust-color($complement-1, $lightness:5%, $saturation:30%);
+*/
+/*
+$btn-bg-top: adjust-color($secondary-b-5,  $lightness:50%, $saturation:-5%);
+$btn-bg-bottom: adjust-color($secondary-b-5, $lightness:-25%, $saturation:30%);
+/* */
 
 $btn-bg-top: adjust-color($secondary-b-4,  $lightness:20%, $saturation:-5%);
 $btn-bg-bottom: adjust-color($secondary-b-3, $lightness:5%, $saturation:30%);
-
+/* */
 
 $btn-gradient: linear-gradient($btn-bg-top, $btn-bg-bottom) ;
 $btn-gradient-ltr: linear-gradient(left, $btn-bg-top, $btn-bg-bottom) ;
@@ -125,15 +131,16 @@ $btn-gradient-rtl: linear-gradient(right, $btn-bg-top, $btn-bg-bottom) ;
 
 .icon-btn {
 	@extend .std-btn;
-	height:1.8em; 
+	height:1.8em;
 	width:1.8em;
 }
 
-$pane-width:350px;
+$pane-width:250px;
 
 @mixin pane() {
   background-color: $pane-bg;
-  //min-width:$pane-width *1.25;
+  min-width:$pane-width;
+  max-width:33%;
   @include box-flex(1);
   box-sizing:border-box;
   padding:0px;

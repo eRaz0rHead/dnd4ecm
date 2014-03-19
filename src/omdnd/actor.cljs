@@ -10,7 +10,7 @@
             [sablono.core :as html :refer-macros [html] ]
 
             [omdnd.util :as util]
-            [omdnd.ux :as ux]
+            [om-component.ux :as ux]
             [omdnd.meter :as meter]
             )
 
